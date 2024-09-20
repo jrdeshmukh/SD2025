@@ -10,7 +10,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 public class Slide {
-    private DcMotorEx slide;
+    public DcMotorEx slide;
     private PIDController controller;
     private double p = 0, i = 0, d = 0, f = 0;
 
