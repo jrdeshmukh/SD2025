@@ -5,6 +5,7 @@ import com.acmerobotics.roadrunner.PoseVelocity2d;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.MecanumDrive;
 import org.firstinspires.ftc.teamcode.wrappers.BBG;
@@ -29,6 +30,7 @@ public class CalibrationTele extends OpMode {
         drive = new MecanumDrive(hardwareMap, new Pose2d(0, 0, 0));
         wrist = new Wrist(hardwareMap);
         slide = new Slide(hardwareMap);
+        claw = new Claw(hardwareMap);
 
         gp1 = new BBG(gamepad1);
         gp2 = new BBG(gamepad2);
@@ -40,16 +42,34 @@ public class CalibrationTele extends OpMode {
     @Override
     public void loop() {
         drive.setDrivePowers(new PoseVelocity2d(new Vector2d(
-                gamepad1.left_stick_x,
-                gamepad1.left_stick_y),
-                gamepad1.right_stick_x
+                -gamepad1.left_stick_y,
+                -gamepad1.left_stick_x),
+                -gamepad1.right_stick_x
         ));
+
+
 
         double clawPos = claw.claw.getPosition();
         double wristPos = wrist.wrist.getPosition();
-        double increment = 0.05;
+        double increment = 0.03;
 
-        slide.setPower(gamepad2.right_stick_y*0.2);
+        if(gp2.dpad_down()) {
+            wrist.setPos(wristPos - increment);
+        }
+        if(gp2.dpad_up()) {
+            wrist.setPos(wristPos + increment);
+        }
+
+        if(gp2.a()) {
+            claw.setPos(clawPos - increment);
+        }
+
+        if (gp2.y()) {
+            claw.setPos(clawPos + increment);
+        }
+
+
+        slide.setPower(gamepad2.right_stick_y);
 
 
 
@@ -57,8 +77,8 @@ public class CalibrationTele extends OpMode {
             target = Slide.LOW_BASKET;
         }
 
-        telemetry.addData("Claw Pos: ", claw2.calibrate(gp2.dpad_up(), gp2.dpad_down()));
-        telemetry.addData("Wrist Pos: ",wrist2.calibrate(gp2.y(), gp2.a()));
+        telemetry.addData("Claw Pos: ", claw.claw.getPosition());
+        telemetry.addData("Wrist Pos: ", wrist.wrist.getPosition());
         telemetry.addData("Slide Pos", slide.slide.getCurrentPosition());
         telemetry.update();
 

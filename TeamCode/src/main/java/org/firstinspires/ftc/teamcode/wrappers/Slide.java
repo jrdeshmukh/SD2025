@@ -11,8 +11,8 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 public class Slide {
     public DcMotorEx slide;
-    private PIDController controller;
-    private double p = 0, i = 0, d = 0, f = 0;
+    private final PIDController controller;
+    private final double p = 0, i = 0, d = 0, f = 0;
 
     private static final double TICKS_IN_DEGREE = 5;
     public static final int BOTTOM = 0;
