@@ -20,25 +20,48 @@ public class Wrist {
         wrist.setPosition(pos);
     }
 
-    public class WristClose implements Action {
+    public class WristBottom implements Action {
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            wrist.setPosition(0);
+            wrist.setPosition(0.24);
             return false;
         }
     }
-    public Action WristClose() {
-        return new WristClose();
+    public Action wristBottom() {
+        return new WristBottom();
     }
-    public class WristOpen implements Action {
+
+    public class WristPickup implements Action {
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            wrist.setPosition(0);
+            wrist.setPosition(0.33);
             return false;
         }
     }
-    public Action clawOpen() {
-        return new WristOpen();
+    public Action wristPickup() {
+        return new WristPickup();
+    }
+
+    public class WristDrop implements Action {
+        @Override
+        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+            wrist.setPosition(0.81);
+            return false;
+        }
+    }
+    public Action wristDrop() {
+        return new WristDrop();
+    }
+
+    public class WristHigh implements Action {
+        @Override
+        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+            wrist.setPosition(1);
+            return false;
+        }
+    }
+    public Action wristHigh() {
+        return new WristHigh();
     }
 
 }
