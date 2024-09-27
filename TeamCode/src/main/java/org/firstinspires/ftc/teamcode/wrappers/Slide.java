@@ -12,35 +12,63 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 public class Slide {
     public DcMotorEx slide;
     private final PIDController controller;
-    private final double p = 0, i = 0, d = 0, f = 0;
+    public final double p = 0, i = 0, d = 0, f = 0;
 
-    private static final double TICKS_IN_DEGREE = 5;
+    private static final double TICKS_IN_DEGREE = 384.5 / 360;
     public static final int BOTTOM = 0;
     public static final int HIGH_BASKET = 0;
     public static final int LOW_BASKET = 0;
+    public boolean active = false;
+    public static double curPow = 0;
+    public static double targetPosition = 0;
 
     public Slide(HardwareMap map) {
         slide = map.get(DcMotorEx.class, "slide");
         slide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        slide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        slide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         controller = new PIDController(p, i, d);
     }
 
-    public boolean setPosition(int targetPosition) {
+    public void runToPos(int targetPosition) {
         int pos = slide.getCurrentPosition();
         double pid = controller.calculate(pos, targetPosition);
-        double ff = Math.cos(Math.toRadians(targetPosition / TICKS_IN_DEGREE)) * f;
-        slide.setPower(pid + ff);
-        return (Math.abs(pid) > 0.05);
+        double ff = targetPosition * f;
+        curPow = pid + ff;
+        slide.setPower(curPow);
     }
+
+
+
+    public class SetPow implements Action {
+        @Override
+        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+            int pos = slide.getCurrentPosition();
+            double pid = controller.calculate(pos, targetPosition);
+            double ff = targetPosition * f;
+            curPow = pid + ff;
+            slide.setPower(curPow);
+            return true;
+        }
+    };
+
+    public Action setPow() {
+        return new SetPow();
+    }
+
+
 
     public class LiftHigh implements Action {
 
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            return setPosition(Slide.HIGH_BASKET);
+            targetPosition = Slide.HIGH_BASKET;
+            return false;
         }
     }
+
+
     public Action liftHigh() {
         return new LiftHigh();
     }
@@ -48,7 +76,8 @@ public class Slide {
     public class LiftLow implements Action {
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            return setPosition(Slide.LOW_BASKET);
+             targetPosition = Slide.LOW_BASKET;
+             return false;
         }
     }
     public Action liftLow() {
@@ -59,7 +88,8 @@ public class Slide {
 
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            return setPosition(Slide.BOTTOM);
+            targetPosition = Slide.BOTTOM;
+            return false;
         }
     }
     public Action liftBottom() {
@@ -70,9 +100,5 @@ public class Slide {
         slide.setPower(power);
     }
 
-    public void setPowerPos(double power, int pos) {
-        if(Math.abs(power)>0) setPower(power);
-        else setPosition(pos);
-    }
 
 }

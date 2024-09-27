@@ -11,14 +11,15 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.teamcode.MecanumDrive;
 import org.firstinspires.ftc.teamcode.wrappers.BBG;
 import org.firstinspires.ftc.teamcode.wrappers.Slide;
+import org.firstinspires.ftc.teamcode.wrappers.SlideRTP;
 
 import java.util.List;
 
 @TeleOp()
-public class SDTele extends OpMode {
+public class SDTeleRTP extends OpMode {
     MecanumDrive drive;
     Servo claw, wrist;
-    Slide slide;
+    SlideRTP slide;
     BBG gp1, gp2;
     List<LynxModule> allHubs;
 
@@ -31,7 +32,7 @@ public class SDTele extends OpMode {
             hub.setBulkCachingMode(LynxModule.BulkCachingMode.AUTO);
         }
 
-        slide = new Slide(hardwareMap);
+        slide = new SlideRTP(hardwareMap);
 
         drive = new MecanumDrive(hardwareMap, new Pose2d(0, 0, 0));
         claw = hardwareMap.get(Servo.class, "claw");
@@ -48,16 +49,6 @@ public class SDTele extends OpMode {
                 -gamepad1.right_stick_x
         ));
 
-        /**if(Math.abs(gamepad2.right_stick_y)>0) {
-             slide.setPower(-gamepad2.left_stick_y);
-             target = slide.slide.getTargetPosition();
-         }
-        else {
-            slide.runToPos(target);
-        }**/
-
-        slide.setPower(-gamepad2.left_stick_y);
-
         if (gp2.right_bumper())                        claw.setPosition(1.00);
         if (gp2.left_bumper())                         claw.setPosition(0.67);
 
@@ -69,5 +60,17 @@ public class SDTele extends OpMode {
         if (gamepad2.dpad_down)                        target = Slide.BOTTOM;
         if (gamepad2.dpad_up)                          target = Slide.HIGH_BASKET;
         if (gamepad2.dpad_left || gamepad2.dpad_right) target = Slide.LOW_BASKET;
+
+        if(Math.abs(gamepad2.right_stick_y)>0) {
+            slide.setPower(-gamepad2.left_stick_y);
+            target = slide.slide.getTargetPosition();
+        }
+        else {
+            slide.setPosition(target);
+        }
+
+        slide.setPower(-gamepad2.left_stick_y);
+
+
     }
 }

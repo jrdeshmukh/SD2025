@@ -27,7 +27,7 @@ public class Claw {
             return false;
         }
     }
-    public Action clawClose() {
+    public Action close() {
         return new ClawClose();
     }
     public class ClawOpen implements Action {
@@ -37,7 +37,8 @@ public class Claw {
             return false;
         }
     }
-    public Action clawOpen() {
+
+    public Action open() {
         return new ClawClose();
     }
 
