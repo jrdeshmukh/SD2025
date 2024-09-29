@@ -22,7 +22,9 @@ public class SDTele extends OpMode {
     BBG gp1, gp2;
     List<LynxModule> allHubs;
 
-    int target = 0;
+    int target = 20;
+    double curpow = 0;
+    double speedMod = 0.75;
 
     @Override
     public void init() {
@@ -42,32 +44,44 @@ public class SDTele extends OpMode {
 
     @Override
     public void loop() {
+        if(gamepad1.right_trigger>0.03) speedMod = 1;
+        if(gamepad1.right_bumper) speedMod = 0.75;
+        if(gamepad1.left_trigger>0.03) speedMod = 0.25;
+        if(gamepad1.left_bumper) speedMod = 0.5;
+
+
         drive.setDrivePowers(new PoseVelocity2d(new Vector2d(
-                -gamepad1.left_stick_y,
-                -gamepad1.left_stick_x),
-                -gamepad1.right_stick_x
+                -gamepad1.left_stick_y*speedMod,
+                -gamepad1.left_stick_x*speedMod),
+                -gamepad1.right_stick_x*speedMod
         ));
+        drive.updatePoseEstimate();
 
-        /**if(Math.abs(gamepad2.right_stick_y)>0) {
-             slide.setPower(-gamepad2.left_stick_y);
-             target = slide.slide.getTargetPosition();
-         }
+        if(Math.abs(gamepad2.right_stick_y)>0) {
+            telemetry.addData("pp", 1);
+             slide.setPower(gamepad2.left_stick_y);
+             target = slide.slide.getCurrentPosition();
+        }
         else {
-            slide.runToPos(target);
-        }**/
+            curpow = slide.runToPos(target);
+        }
 
-        slide.setPower(-gamepad2.left_stick_y);
 
-        if (gp2.right_bumper())                        claw.setPosition(1.00);
-        if (gp2.left_bumper())                         claw.setPosition(0.67);
+        if (gp2.right_bumper())                        claw.setPosition(0.81); //open
+        if (gp2.left_bumper())                         claw.setPosition(0.39); //close
 
-        if (gamepad2.left_trigger>0.01)                wrist.setPosition(0.33);
-        if (gamepad2.right_trigger>0.01)               wrist.setPosition(0.81);
-        if (gp2.a())                                   wrist.setPosition(0.24);
-        if (gp2.x() || gp2.y() || gp2.b())             wrist.setPosition(1);
+        if (gamepad2.left_trigger>0.01)                wrist.setPosition(0.86); //straight up
+        if (gamepad2.right_trigger>0.01)               wrist.setPosition(0.1494); //pickup
+        if (gp2.x())                                   wrist.setPosition(0.5089); //sstraight out
+        if (gp2.y())                                   wrist.setPosition(0.7489); //score, 60 degree above flat
 
         if (gamepad2.dpad_down)                        target = Slide.BOTTOM;
         if (gamepad2.dpad_up)                          target = Slide.HIGH_BASKET;
         if (gamepad2.dpad_left || gamepad2.dpad_right) target = Slide.LOW_BASKET;
+
+        telemetry.addData("slide current", slide.slide.getCurrentPosition());
+        telemetry.addData("speed mod: ", speedMod);
+        telemetry.addData("slide target", target);
+        telemetry.addData("slide power: ", curpow);
     }
 }

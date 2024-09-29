@@ -37,6 +37,7 @@ public class CalibrationTele extends OpMode {
 
         claw2 = new CalibrateServo(claw.claw);
         wrist2 = new CalibrateServo(wrist.wrist);
+        wrist.setPos(0.5);
     }
 
     @Override
@@ -80,6 +81,7 @@ public class CalibrationTele extends OpMode {
         telemetry.addData("Claw Pos: ", claw.claw.getPosition());
         telemetry.addData("Wrist Pos: ", wrist.wrist.getPosition());
         telemetry.addData("Slide Pos", slide.slide.getCurrentPosition());
+        telemetry.addData("Slide power: ", gamepad2.right_stick_y);
         telemetry.update();
 
 
