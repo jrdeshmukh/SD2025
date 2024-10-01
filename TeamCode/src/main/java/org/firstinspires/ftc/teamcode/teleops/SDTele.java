@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode.teleops;
 
-import com.acmerobotics.roadrunner.Pose2d;
+import  com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.PoseVelocity2d;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.qualcomm.hardware.lynx.LynxModule;
@@ -57,7 +57,7 @@ public class SDTele extends OpMode {
         ));
         drive.updatePoseEstimate();
 
-        if(Math.abs(gamepad2.right_stick_y)>0) {
+        if(Math.abs(gamepad2.left_stick_y)>0) {
             telemetry.addData("pp", 1);
              slide.setPower(gamepad2.left_stick_y);
              target = slide.slide.getCurrentPosition();

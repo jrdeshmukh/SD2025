@@ -10,7 +10,8 @@ import com.qualcomm.robotcore.hardware.Servo;
 public class Wrist {
     public Servo wrist;
 
-    public static double BOTTOM = 0.24, PICKUP = 0.33, DROP = 0.81, HIGH = 1;
+    public static double BOTTOM = 0.24, PICKUP = 0.1494, DROP = 0.7489, HIGH = 0.86;
+    public static double HIGH_RUNG = 0.527;
 
     public Wrist(HardwareMap map) {
         wrist = map.servo.get("wrist");
@@ -18,6 +19,19 @@ public class Wrist {
 
     public void setPos(double pos) {
         wrist.setPosition(pos);
+    }
+
+
+    public class WristHighRung implements Action {
+        @Override
+        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+            wrist.setPosition(HIGH_RUNG);
+            return false;
+        }
+    }
+
+    public Action highRung() {
+        return new WristHighRung();
     }
 
     public class WristBottom implements Action {
@@ -34,7 +48,7 @@ public class Wrist {
     public class WristPickup implements Action {
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            wrist.setPosition(0.33);
+            wrist.setPosition(PICKUP);
             return false;
         }
     }
@@ -45,7 +59,7 @@ public class Wrist {
     public class WristDrop implements Action {
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            wrist.setPosition(0.81);
+            wrist.setPosition(DROP);
             return false;
         }
     }
@@ -56,7 +70,7 @@ public class Wrist {
     public class WristHigh implements Action {
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            wrist.setPosition(1);
+            wrist.setPosition(HIGH);
             return false;
         }
     }

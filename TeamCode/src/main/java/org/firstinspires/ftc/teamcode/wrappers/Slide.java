@@ -17,6 +17,7 @@ public class Slide {
     public static final int BOTTOM = 20;
     public static final int HIGH_BASKET = 3250;
     public static final int LOW_BASKET = 1875;
+    public static final int HIGH_RUNG = 1050;
     public boolean active = false;
     public static double curPow = 0;
     public static double targetPosition = 0;
@@ -46,7 +47,7 @@ public class Slide {
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
             int pos = slide.getCurrentPosition();
             double pid = controller.calculate(pos, targetPosition);
-            double ff = targetPosition * f;
+            double ff = pos * f;
             curPow = pid + ff;
             slide.setPower(curPow);
             return true;
@@ -55,6 +56,18 @@ public class Slide {
 
     public Action setPow() {
         return new SetPow();
+    }
+
+    public class HighRung implements Action {
+        @Override
+        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+            targetPosition = Slide.HIGH_RUNG;
+            return false;
+        }
+    }
+
+    public Action highRung() {
+        return new HighRung();
     }
 
 

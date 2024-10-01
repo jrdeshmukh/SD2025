@@ -23,7 +23,7 @@ public class Claw {
     public class ClawClose implements Action {
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            claw.setPosition(0.67);
+            claw.setPosition(0.39);
             return false;
         }
     }
@@ -33,13 +33,13 @@ public class Claw {
     public class ClawOpen implements Action {
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            claw.setPosition(1);
+            claw.setPosition(0.81);
             return false;
         }
     }
 
     public Action open() {
-        return new ClawClose();
+        return new ClawOpen();
     }
 
 }
