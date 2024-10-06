@@ -16,7 +16,7 @@ public class Claw {
         claw = map.servo.get("claw");
     }
 
-    public void setPos(double pos) {
+    public void setPosition(double pos) {
         claw.setPosition(pos);
     }
 

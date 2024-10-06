@@ -36,35 +36,41 @@ public class Test2 {
                 .waitSeconds(2);
 
         TrajectoryActionBuilder go1 = dropSpecimen.fresh()
-                .strafeTo(new Vector2d(-10, -45))
+                //.splineToConstantHeading(new Vector2d(-48, -37), 3*pi/2)
+                //.strafeTo(new Vector2d(-10, -45))
                 .strafeTo(new Vector2d(-48, -37))
                 .waitSeconds(2);
 
         TrajectoryActionBuilder basket1 = go1.fresh()
-                .strafeTo(new Vector2d(-48, -41))
-                .strafeToLinearHeading(new Vector2d(-50.1, -50.1), 5*pi/4)
                 .strafeToLinearHeading(new Vector2d(-54.1, -54.1), 5*pi/4)
+                //.strafeTo(new Vector2d(-48, -41))
+                //.strafeToLinearHeading(new Vector2d(-50.1, -50.1), 5*pi/4)
+                //.strafeToLinearHeading(new Vector2d(-54.1, -54.1), 5*pi/4)
                 .waitSeconds(2);
 
         TrajectoryActionBuilder go2 = basket1.fresh()
-                .strafeTo(new Vector2d(-50.1, -50.1))
+                //.strafeTo(new Vector2d(-50.1, -50.1))
                 .strafeToLinearHeading(new Vector2d(-58.5, -38), pi/2)
+
+                //.strafeToLinearHeading(new Vector2d(-58.5, -38), pi/2)
                 .waitSeconds(2);
 
         TrajectoryActionBuilder basket2 = go2.fresh()
-                .strafeTo(new Vector2d(-58.5, -41))
-                .strafeToLinearHeading(new Vector2d(-50.1, -50.1), 5*pi/4)
                 .strafeToLinearHeading(new Vector2d(-54.1, -54.1), 5*pi/4)
+
+                //.strafeTo(new Vector2d(-58.5, -41))
+                //.strafeToLinearHeading(new Vector2d(-50.1, -50.1), 5*pi/4)
+                //.strafeToLinearHeading(new Vector2d(-54.1, -54.1), 5*pi/4)
                 .waitSeconds(2);
 
         TrajectoryActionBuilder go3 = basket2.fresh()
-                .strafeTo(new Vector2d(-50.1, -50.1))
+                //.strafeTo(new Vector2d(-50.1, -50.1))
                 .strafeToLinearHeading(new Vector2d(-57.6, -24), pi)
                 .waitSeconds(2);
 
         TrajectoryActionBuilder basket3 = go3.fresh()
-                .strafeTo(new Vector2d(-50, -24))
-                .strafeToLinearHeading(new Vector2d(-50.1, -50.1), 5*pi/4)
+                //.strafeTo(new Vector2d(-50, -24))
+                //.strafeToLinearHeading(new Vector2d(-50.1, -50.1), 5*pi/4)
                 .strafeToLinearHeading(new Vector2d(-54.1, -54.1), 5*pi/4)
                 .waitSeconds(2);
 

@@ -14,13 +14,13 @@ public class Slide {
     private final PIDController controller;
     public final double p = 0.007, i = 0, d = 0.0005, f = 0.00005;
 
-    public static final int BOTTOM = 20;
+    public static final int BOTTOM = 0;
     public static final int HIGH_BASKET = 3250;
     public static final int LOW_BASKET = 1875;
     public static final int HIGH_RUNG = 1050;
     public boolean active = false;
     public static double curPow = 0;
-    public static double targetPosition = 0;
+    public double targetPosition = 0;
 
     public Slide(HardwareMap map) {
         slide = map.get(DcMotorEx.class, "slide");
@@ -31,13 +31,16 @@ public class Slide {
         controller.setPID(p, i, d);
     }
 
-    public double runToPos(int targetPosition) {
+    public void runToPos(int targetPosition) {
+        this.targetPosition = targetPosition;
+    }
+
+    public void setPow2() {
         int pos = slide.getCurrentPosition();
         double pid = controller.calculate(pos, targetPosition);
         double ff = pos * f;
         curPow = pid + ff;
         slide.setPower(curPow);
-        return curPow;
     }
 
 

@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.teleops;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.PoseVelocity2d;
 import com.acmerobotics.roadrunner.Vector2d;
@@ -14,6 +15,7 @@ import org.firstinspires.ftc.teamcode.wrappers.Claw;
 import org.firstinspires.ftc.teamcode.wrappers.Slide;
 import org.firstinspires.ftc.teamcode.wrappers.Wrist;
 
+@Config
 @TeleOp()
 public class CalibrationTele extends OpMode {
     MecanumDrive drive;
@@ -37,7 +39,7 @@ public class CalibrationTele extends OpMode {
 
         claw2 = new CalibrateServo(claw.claw);
         wrist2 = new CalibrateServo(wrist.wrist);
-        wrist.setPos(0.5);
+        wrist.setPosition(0.5);
     }
 
     @Override
@@ -55,18 +57,18 @@ public class CalibrationTele extends OpMode {
         double increment = 0.03;
 
         if(gp2.dpad_down()) {
-            wrist.setPos(wristPos - increment);
+            wrist.setPosition(wristPos - increment);
         }
         if(gp2.dpad_up()) {
-            wrist.setPos(wristPos + increment);
+            wrist.setPosition(wristPos + increment);
         }
 
         if(gp2.a()) {
-            claw.setPos(clawPos - increment);
+            claw.setPosition(clawPos - increment);
         }
 
         if (gp2.y()) {
-            claw.setPos(clawPos + increment);
+            claw.setPosition(clawPos + increment);
         }
 
 

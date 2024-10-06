@@ -11,6 +11,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.teamcode.MecanumDrive;
 import org.firstinspires.ftc.teamcode.wrappers.BBG;
 import org.firstinspires.ftc.teamcode.wrappers.Slide;
+import org.firstinspires.ftc.teamcode.wrappers.Wrist;
 
 import java.util.List;
 
@@ -51,37 +52,37 @@ public class SDTele extends OpMode {
 
 
         drive.setDrivePowers(new PoseVelocity2d(new Vector2d(
-                -gamepad1.left_stick_y*speedMod,
-                -gamepad1.left_stick_x*speedMod),
-                -gamepad1.right_stick_x*speedMod
-        ));
+                    -gamepad1.left_stick_y*speedMod,
+                    -gamepad1.left_stick_x*speedMod),
+                    -gamepad1.right_stick_x*speedMod
+            ));
         drive.updatePoseEstimate();
 
         if(Math.abs(gamepad2.left_stick_y)>0) {
-            telemetry.addData("pp", 1);
-             slide.setPower(gamepad2.left_stick_y);
-             target = slide.slide.getCurrentPosition();
+            slide.setPower(-gamepad2.left_stick_y);
+            slide.runToPos(slide.slide.getCurrentPosition());
         }
         else {
-            curpow = slide.runToPos(target);
+            slide.setPow2();
         }
 
 
         if (gp2.right_bumper())                        claw.setPosition(0.81); //open
         if (gp2.left_bumper())                         claw.setPosition(0.39); //close
 
-        if (gamepad2.left_trigger>0.01)                wrist.setPosition(0.86); //straight up
-        if (gamepad2.right_trigger>0.01)               wrist.setPosition(0.1494); //pickup
-        if (gp2.x())                                   wrist.setPosition(0.5089); //sstraight out
-        if (gp2.y())                                   wrist.setPosition(0.7489); //score, 60 degree above flat
+        if (gamepad2.left_trigger>0.01)                wrist.setPosition(Wrist.HIGH); //straight up
+        if (gamepad2.right_trigger>0.01)               wrist.setPosition(Wrist.PICKUP); //pickup
+        if (gp2.x())                                   wrist.setPosition(0.4383); //sstraight out
+        if (gp2.y())                                   wrist.setPosition(Wrist.DROP); //score, 60 degree above flat
 
-        if (gamepad2.dpad_down)                        target = Slide.BOTTOM;
-        if (gamepad2.dpad_up)                          target = Slide.HIGH_BASKET;
+        if (gamepad2.dpad_down)                        slide.runToPos(Slide.BOTTOM);
+        if (gamepad2.dpad_up)                          slide.runToPos(Slide.HIGH_BASKET);
         if (gamepad2.dpad_left || gamepad2.dpad_right) target = Slide.LOW_BASKET;
 
         telemetry.addData("slide current", slide.slide.getCurrentPosition());
         telemetry.addData("speed mod: ", speedMod);
         telemetry.addData("slide target", target);
-        telemetry.addData("slide power: ", curpow);
+        telemetry.addData("claw pos", claw.getPosition());
+        telemetry.update();
     }
 }
