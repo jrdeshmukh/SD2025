@@ -29,12 +29,12 @@ public class SDAutoTele extends OpMode {
     BBG gp1, gp2;
     List<LynxModule> allHubs;
     Action pickupAction, dropAction;
-    Pose2d basket = new Pose2d(0,0,0);
+    Pose2d basket = new Pose2d(-54.1, -54.1, 5*Math.PI/4);
     FtcDashboard dash = FtcDashboard.getInstance();
     Claw claw;
     Wrist wrist;
     Action goAction;
-    boolean autoDriving;
+    boolean autoDriving, lifting;
 
 
     int target = 20;
@@ -50,13 +50,29 @@ public class SDAutoTele extends OpMode {
         }
 
         slide = new Slide(hardwareMap);
-        basket = new Pose2d(0,0,0);
         claw = new Claw(hardwareMap);
         wrist = new Wrist(hardwareMap);
-        drive = new MecanumDrive(hardwareMap, new Pose2d(0, 0, 0));
+        drive = new MecanumDrive(hardwareMap, new Pose2d(-36.3912, -10.766, 0));
         goAction = claw.close();
         gp2 = new BBG(gamepad2);
         gp1 = new BBG(gamepad1);
+
+        dropAction = new SequentialAction(
+                wrist.wristHigh(),
+                slide.liftHigh(),
+                new SleepAction(1.5),
+                wrist.wristDrop()
+        );
+
+        pickupAction = new SequentialAction(
+                claw.open(),
+                new SleepAction(0.75),
+                wrist.wristHigh(),
+                new SleepAction(0.5),
+                slide.liftBottom(),
+                new SleepAction(0.5),
+                wrist.wristPickup()
+        );
     }
 
     @Override
@@ -64,20 +80,26 @@ public class SDAutoTele extends OpMode {
         TelemetryPacket packet = new TelemetryPacket();
         autoDriving = false;
 
+
         if(gamepad2.dpad_left) {
             runningActions.add(new SequentialAction(
+                    claw.close(),
                     wrist.wristHigh(),
-                    new InstantAction(() -> slide.runToPos(Slide.HIGH_BASKET)),
-                    new SleepAction(1.5),
+                    slide.liftHigh(),
+                    new SleepAction(1.2),
                     wrist.wristDrop()
             ));
         }
         if(gamepad2.dpad_right) {
             runningActions.add(new SequentialAction(
+                    claw.open(),
+                    new SleepAction(0.75),
                     wrist.wristHigh(),
                     new SleepAction(0.5),
-                    new InstantAction(() -> slide.runToPos(Slide.BOTTOM)),
-                    wrist.wristPickup()));
+                    slide.liftBottom(),
+                    new SleepAction(0.5),
+                    wrist.wristPickup()
+            ));
         }
 
 
@@ -110,7 +132,7 @@ public class SDAutoTele extends OpMode {
         if(gamepad1.left_trigger>0.03) speedMod = 0.25;
         if(gamepad1.left_bumper) speedMod = 0.5;
 
-        if (Math.abs(gamepad1.left_stick_x + gamepad2.left_stick_y + gamepad2.right_stick_x)>0 || !autoDriving) {
+        if ((Math.abs(gamepad1.left_stick_x) + Math.abs(gamepad2.left_stick_y) + Math.abs(gamepad2.right_stick_x))>0 || !autoDriving) {
             if (autoDriving) {
                 runningActions.remove(goAction);
             }
@@ -141,7 +163,7 @@ public class SDAutoTele extends OpMode {
         if (gp2.y())                                   wrist.setPosition(0.7489); //score, 60 degree above flat
 
         if (gamepad2.dpad_down)                        slide.runToPos(Slide.BOTTOM);
-        if (gamepad2.dpad_up)                          {slide.runToPos(Slide.HIGH_BASKET); speedMod = 0.25;}
+        if (gamepad2.dpad_up)                          slide.runToPos(Slide.HIGH_BASKET);
 
 
 

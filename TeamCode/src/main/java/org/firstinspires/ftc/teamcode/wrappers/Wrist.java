@@ -10,8 +10,8 @@ import com.qualcomm.robotcore.hardware.Servo;
 public class Wrist {
     public Servo wrist;
 
-    public static double PICKUP = 0.0778, DROP = 0.6183, HIGH = 0.8294;
-    public static double HIGH_RUNG = 0.527;
+    public static double PICKUP = 0.0794, DROP = 0.6194, HIGH = 0.8294;
+    public static double HIGH_RUNG = 0.5594;
 
     public Wrist(HardwareMap map) {
         wrist = map.servo.get("wrist");

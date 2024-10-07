@@ -74,6 +74,10 @@ public class Test2 {
                 .strafeToLinearHeading(new Vector2d(-54.1, -54.1), 5*pi/4)
                 .waitSeconds(2);
 
+        TrajectoryActionBuilder park = basket3.fresh()
+                .strafeToLinearHeading(new Vector2d(-40, -12), 0)
+                .waitSeconds(2);
+
 
 
 
@@ -90,7 +94,8 @@ public class Test2 {
                         go2.build(),
                         basket2.build(),
                         go3.build(),
-                        basket3.build()
+                        basket3.build(),
+                        park.build()
                 )
         );
 

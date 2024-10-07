@@ -12,12 +12,12 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 public class Slide {
     public DcMotorEx slide;
     private final PIDController controller;
-    public final double p = 0.007, i = 0, d = 0.0005, f = 0.00005;
+    public final double p = 0.015, i = 0, d = 0.0005, f = 0.00005;
 
     public static final int BOTTOM = 0;
-    public static final int HIGH_BASKET = 3250;
+    public static final int HIGH_BASKET = 3150;
     public static final int LOW_BASKET = 1875;
-    public static final int HIGH_RUNG = 1050;
+    public static final int HIGH_RUNG = 1013;
     public boolean active = false;
     public static double curPow = 0;
     public double targetPosition = 0;
