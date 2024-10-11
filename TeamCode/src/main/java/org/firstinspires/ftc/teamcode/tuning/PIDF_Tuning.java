@@ -41,16 +41,11 @@ public class PIDF_Tuning extends OpMode {
         }
         controller.setPID(p,i,d);
         int pos = motor.getCurrentPosition();
-
         double pid = controller.calculate(pos, target);
-
         double ff = pos * f;
-
-
-        double power = pid + ff;
-
-        motor.setPower(power);
-        telemetry.addData("power: ", power);
+        double curPow = pid + ff;
+        motor.setPower(curPow);
+        telemetry.addData("power: ", curPow);
         telemetry.addData("pos: ", pos);
         telemetry.addData("lTarget: ", target);
         telemetry.update();

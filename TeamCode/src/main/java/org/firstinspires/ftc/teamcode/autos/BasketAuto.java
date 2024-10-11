@@ -44,7 +44,7 @@ public class BasketAuto extends LinearOpMode {
 
         TrajectoryActionBuilder toFirst = toSpecimen.fresh()
                 .strafeTo(new Vector2d(-10, -45))
-                .strafeTo(new Vector2d(-49.7, -37.5))
+                .strafeTo(new Vector2d(-49, -36.5))
                 .waitSeconds(0.1);
 
         TrajectoryActionBuilder toBasket1 = toFirst.fresh()
@@ -55,7 +55,7 @@ public class BasketAuto extends LinearOpMode {
 
         TrajectoryActionBuilder toSecond = toBasket1.fresh()
                 //.strafeTo(new Vector2d(-50.1, -50.1))
-                .strafeToLinearHeading(new Vector2d(-59.5, -37.5), pi/2)
+                .strafeToLinearHeading(new Vector2d(-59, -36.5), pi/2)
                 .waitSeconds(0.1);
 
         TrajectoryActionBuilder toBasket2 = toSecond.fresh()
@@ -66,7 +66,7 @@ public class BasketAuto extends LinearOpMode {
 
         TrajectoryActionBuilder toThird = toBasket2.fresh()
                 .strafeTo(new Vector2d(-50.1, -50.1))
-                .strafeToLinearHeading(new Vector2d(-59.7, -26.5), pi)
+                .strafeToLinearHeading(new Vector2d(-59.5, -26.5), pi)
                 .waitSeconds(0.1);
 
         TrajectoryActionBuilder backup = toThird.fresh()

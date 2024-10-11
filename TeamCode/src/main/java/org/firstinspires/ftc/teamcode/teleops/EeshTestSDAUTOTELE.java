@@ -2,20 +2,13 @@ package org.firstinspires.ftc.teamcode.teleops;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
-import com.acmerobotics.roadrunner.AccelConstraint;
 import com.acmerobotics.roadrunner.Action;
-import com.acmerobotics.roadrunner.AngularVelConstraint;
-import com.acmerobotics.roadrunner.CompositeVelConstraint;
 import com.acmerobotics.roadrunner.InstantAction;
-import com.acmerobotics.roadrunner.MinVelConstraint;
 import  com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.PoseVelocity2d;
-import com.acmerobotics.roadrunner.ProfileAccelConstraint;
 import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.SleepAction;
-import com.acmerobotics.roadrunner.TranslationalVelConstraint;
 import com.acmerobotics.roadrunner.Vector2d;
-import com.acmerobotics.roadrunner.VelConstraint;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -27,15 +20,15 @@ import org.firstinspires.ftc.teamcode.wrappers.Slide;
 import org.firstinspires.ftc.teamcode.wrappers.Wrist;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 @TeleOp()
-public class SDAutoTele extends OpMode {
+public class EeshTestSDAUTOTELE extends OpMode {
     MecanumDrive drive;
     Slide slide;
     BBG gp1, gp2;
-
+    List<LynxModule> allHubs;
+    Action pickupAction, dropAction;
     Pose2d basket = new Pose2d(-54.1, -54.1, 5*Math.PI/4);
     FtcDashboard dash = FtcDashboard.getInstance();
     Claw claw;
@@ -43,29 +36,47 @@ public class SDAutoTele extends OpMode {
     Action goAction;
     boolean autoDriving = false, lifting;
 
+    static Pose2d targetPose = new Pose2d(0, 0,0);
+    static double linearGhostingFactor = 0.015;
+    static double angularGhostingFactor = 0.015;
+
 
     int target = 20;
     double curpow = 0;
     double speedMod = 0.75;
     List<Action> runningActions = new ArrayList<>();
-    VelConstraint baseVelConstraint = new MinVelConstraint(
-            Arrays.asList(
-                            new TranslationalVelConstraint(80),
-                            new AngularVelConstraint(3*Math.PI/2)
-                    ));
-
-    AccelConstraint accelConstraint = new ProfileAccelConstraint(-3*Math.PI/2, 3*Math.PI/2);
 
     @Override
     public void init() {
+        allHubs = hardwareMap.getAll(LynxModule.class);
+        for(LynxModule hub: allHubs) {
+            hub.setBulkCachingMode(LynxModule.BulkCachingMode.AUTO);
+        }
+
         slide = new Slide(hardwareMap);
         claw = new Claw(hardwareMap);
         wrist = new Wrist(hardwareMap);
         drive = new MecanumDrive(hardwareMap, new Pose2d(-36.3912, -10.766, 0));
+        targetPose = drive.pose;
         goAction = claw.close();
         gp2 = new BBG(gamepad2);
         gp1 = new BBG(gamepad1);
 
+        dropAction = new SequentialAction(
+                slide.liftHigh(),
+                new SleepAction(1.5),
+                wrist.wristDrop()
+        );
+
+        pickupAction = new SequentialAction(
+                claw.open(),
+                new SleepAction(0.75),
+                wrist.wristHigh(),
+                new SleepAction(0.5),
+                slide.liftBottom(),
+                new SleepAction(0.5),
+                wrist.wristPickup()
+        );
     }
 
     @Override
@@ -73,32 +84,33 @@ public class SDAutoTele extends OpMode {
         TelemetryPacket packet = new TelemetryPacket();
         autoDriving = false;
 
-        if(gp2.dpad_up()) {
+        if(gamepad2.dpad_left) {
             runningActions.add(new SequentialAction(
                     claw.close(),
+                    wrist.wristHigh(),
                     slide.liftHigh(),
-                    new SleepAction(1.35),
+                    new SleepAction(1.2),
                     wrist.wristDrop()
             ));
         }
-        if(gp2.dpad_down()) {
+        if(gamepad2.dpad_right) {
             runningActions.add(new SequentialAction(
                     claw.open(),
-                    new SleepAction(0.3),
+                    new SleepAction(0.75),
                     wrist.wristHigh(),
-                    new SleepAction(0.3),
+                    new SleepAction(0.5),
                     slide.liftBottom(),
-                    new SleepAction(1),
+                    new SleepAction(0.5),
                     wrist.wristPickup()
             ));
         }
 
 
-        if(gp1.a()) {
+        if(gamepad1.a) {
             basket = drive.pose;
         }
 
-        if (gp1.b()) {
+        if (gamepad1.b) {
             goAction = drive.actionBuilder(drive.pose).strafeToLinearHeading(basket.position, basket.heading).build();
             runningActions.add(goAction);
         }
@@ -127,16 +139,26 @@ public class SDAutoTele extends OpMode {
             if (autoDriving) {
                 runningActions.remove(goAction);
             }
+            targetPose = new Pose2d((targetPose.position.x - gamepad1.left_stick_y) * linearGhostingFactor,
+                    (targetPose.position.y - gamepad1.left_stick_x) * linearGhostingFactor,
+                    (targetPose.heading.toDouble() - gamepad1.right_stick_x) * angularGhostingFactor);
+
+        }
+
+
+        if(!autoDriving)
+        {
             drive.setDrivePowers(new PoseVelocity2d(new Vector2d(
-                    -gamepad1.left_stick_y*speedMod,
-                    -gamepad1.left_stick_x*speedMod),
-                    -gamepad1.right_stick_x*speedMod
+                    targetPose.position.x,
+                    targetPose.position.y),
+                    targetPose.heading.toDouble()
             ));
         }
 
         drive.updatePoseEstimate();
 
         if(Math.abs(gamepad2.left_stick_y)>0) {
+            telemetry.addData("pp", 1);
             slide.setPower(gamepad2.left_stick_y);
             slide.runToPos(slide.slide.getCurrentPosition());
         }
@@ -148,31 +170,27 @@ public class SDAutoTele extends OpMode {
         if (gp2.right_bumper())                        claw.setPosition(0.81); //open
         if (gp2.left_bumper())                         claw.setPosition(0.39); //close
 
-        if (gamepad2.left_trigger>0.01)                wrist.setPosition(Wrist.HIGH); //straight up
-        if (gamepad2.right_trigger>0.01)               wrist.setPosition(Wrist.PICKUP); //pickup
-        if (gp2.x())                                   wrist.setPosition(0.5); //sstraight out
-        if (gp2.y())                                   wrist.setPosition(Wrist.DROP); //score, 60 degree above flat
+        if (gamepad2.left_trigger>0.01)                wrist.setPosition(0.86); //straight up
+        if (gamepad2.right_trigger>0.01)               wrist.setPosition(0.1494); //pickup
+        if (gp2.x())                                   wrist.setPosition(0.5089); //sstraight out
+        if (gp2.y())                                   wrist.setPosition(0.7489); //score, 60 degree above flat
 
-        if (gp2.dpad_left())                        slide.runToPos(Slide.BOTTOM);
-        if (gp2.dpad_right())                       slide.runToPos(Slide.HIGH_BASKET);
-
-
+        if (gamepad2.dpad_down)                        slide.runToPos(Slide.BOTTOM);
+        if (gamepad2.dpad_up)                          slide.runToPos(Slide.HIGH_BASKET);
 
 
 
-    
+
+
+
 
 
 
         telemetry.addData("slide current", slide.slide.getCurrentPosition());
         telemetry.addData("speed mod: ", speedMod);
         telemetry.addData("slide target", target);
+        telemetry.addData("pose target", targetPose);
         telemetry.addData("claw pos", claw.claw.getPosition());
-        telemetry.addData("x: ", drive.pose.position.x);
-        telemetry.addData("y: ", drive.pose.position.y);
-        telemetry.addData("heading: ", Math.toDegrees(drive.pose.heading.toDouble()));
-        telemetry.addData("running actions: ", runningActions.size());
-        telemetry.addData("autoDriving: ", autoDriving);
         telemetry.update();
     }
 }

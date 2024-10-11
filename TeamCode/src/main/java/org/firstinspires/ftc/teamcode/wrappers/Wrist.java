@@ -11,7 +11,7 @@ public class Wrist {
     public Servo wrist;
 
     public static double PICKUP = 0.0794, DROP = 0.6194, HIGH = 0.8294;
-    public static double HIGH_RUNG = 0.5594;
+    public static double HIGH_RUNG = 0.5594, SPECIMEN = 0.53;
 
     public Wrist(HardwareMap map) {
         wrist = map.servo.get("wrist");
@@ -66,6 +66,19 @@ public class Wrist {
     }
     public Action wristHigh() {
         return new WristHigh();
+    }
+
+    public class WristSpecimen implements Action {
+
+        @Override
+        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+            wrist.setPosition(SPECIMEN);
+            return false;
+        }
+    }
+
+    public Action wristSpecimen() {
+        return new WristSpecimen();
     }
 
 }
