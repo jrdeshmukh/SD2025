@@ -137,7 +137,7 @@ public class SDAutoTele extends OpMode {
         drive.updatePoseEstimate();
 
         if(Math.abs(gamepad2.left_stick_y)>0) {
-            slide.setPower(gamepad2.left_stick_y);
+            slide.setPower(-gamepad2.left_stick_y);
             slide.runToPos(slide.slide.getCurrentPosition());
         }
         else {
@@ -152,10 +152,7 @@ public class SDAutoTele extends OpMode {
         if (gamepad2.right_trigger>0.01)               wrist.setPosition(Wrist.PICKUP); //pickup
         if (gp2.x())                                   wrist.setPosition(0.5); //sstraight out
         if (gp2.y())                                   wrist.setPosition(Wrist.DROP); //score, 60 degree above flat
-
-        if (gp2.dpad_left())                        slide.runToPos(Slide.BOTTOM);
-        if (gp2.dpad_right())                       slide.runToPos(Slide.HIGH_BASKET);
-
+        
 
 
 
