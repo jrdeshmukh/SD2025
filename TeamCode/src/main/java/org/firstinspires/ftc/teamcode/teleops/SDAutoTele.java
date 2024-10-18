@@ -43,6 +43,8 @@ public class SDAutoTele extends OpMode {
     Action goAction;
     boolean autoDriving = false, lifting;
 
+    double fw, strafe, turn;
+
 
     int target = 20;
     double curpow = 0;
@@ -114,6 +116,8 @@ public class SDAutoTele extends OpMode {
         }
 
 
+
+
         runningActions = newActions;
         dash.sendTelemetryPacket(packet);
 
@@ -123,14 +127,22 @@ public class SDAutoTele extends OpMode {
         if(gamepad1.left_trigger>0.03) speedMod = 0.25;
         if(gamepad1.left_bumper) speedMod = 0.5;
 
+
+
         if ((Math.abs(gamepad1.left_stick_x) + Math.abs(gamepad1.left_stick_y) + Math.abs(gamepad1.right_stick_x))>0 || !autoDriving) {
             if (autoDriving) {
                 runningActions.remove(goAction);
             }
+            if(fw == -gamepad1.left_stick_x*speedMod && strafe == -gamepad1.left_stick_y*speedMod && turn == -gamepad1.right_stick_x*speedMod) {
+
+            }
+            fw = -gamepad1.left_stick_x*speedMod;
+            strafe = -gamepad1.left_stick_y*speedMod;
+            turn = -gamepad1.right_stick_x*speedMod;
             drive.setDrivePowers(new PoseVelocity2d(new Vector2d(
-                    -gamepad1.left_stick_y*speedMod,
-                    -gamepad1.left_stick_x*speedMod),
-                    -gamepad1.right_stick_x*speedMod
+                    strafe,
+                    fw),
+                    turn
             ));
         }
 

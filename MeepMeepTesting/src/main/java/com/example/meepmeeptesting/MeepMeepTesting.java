@@ -65,7 +65,13 @@ public class MeepMeepTesting {
 
         TrajectoryActionBuilder pickup3 = score1.fresh()
                 .strafeToLinearHeading(new Vector2d(48, -56), 3*pi/2)
-                .strafeTo(new Vector2d(48, -59));
+                .strafeTo(new Vector2d(48, -59))
+                .waitSeconds(0.1);
+
+        TrajectoryActionBuilder score2 = pickup3.fresh()
+                        .strafeTo(new Vector2d(48, -56))
+                                .strafeToLinearHeading(new Vector2d(4, -38), pi/2)
+                                        .strafeToLinearHeading(new Vector2d(4, -34), pi/2);
 
         myBot.runAction(
                 new SequentialAction(
@@ -75,7 +81,8 @@ public class MeepMeepTesting {
                         pickup2.build(),
                         drop2.build(),
                         score1.build(),
-                        pickup3.build()
+                        pickup3.build(),
+                        score2.build()
                 )
         );
 

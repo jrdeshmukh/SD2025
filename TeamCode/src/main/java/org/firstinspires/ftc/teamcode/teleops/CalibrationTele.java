@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode.teleops;
 
+import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.PoseVelocity2d;
 import com.acmerobotics.roadrunner.Vector2d;
@@ -8,6 +10,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.firstinspires.ftc.teamcode.Drawing;
 import org.firstinspires.ftc.teamcode.MecanumDrive;
 import org.firstinspires.ftc.teamcode.wrappers.BBG;
 import org.firstinspires.ftc.teamcode.wrappers.CalibrateServo;
@@ -29,7 +32,7 @@ public class CalibrationTele extends OpMode {
 
     @Override
     public void init() {
-        drive = new MecanumDrive(hardwareMap, new Pose2d(0, 0, 0));
+        drive = new MecanumDrive(hardwareMap, new Pose2d(0, 0, Math.PI/2));
         wrist = new Wrist(hardwareMap);
         slide = new Slide(hardwareMap);
         claw = new Claw(hardwareMap);
@@ -80,10 +83,25 @@ public class CalibrationTele extends OpMode {
             target = Slide.LOW_BASKET;
         }
 
+        drive.updatePoseEstimate();
+
+        telemetry.addData("x", drive.pose.position.x);
+        telemetry.addData("y", drive.pose.position.y);
+        telemetry.addData("heading (deg)", Math.toDegrees(drive.pose.heading.toDouble()));
+
+        TelemetryPacket packet = new TelemetryPacket();
+        packet.fieldOverlay().setStroke("#3F51B5");
+        Drawing.drawRobot(packet.fieldOverlay(), drive.pose);
+        FtcDashboard.getInstance().sendTelemetryPacket(packet);
+
         telemetry.addData("Claw Pos: ", claw.claw.getPosition());
         telemetry.addData("Wrist Pos: ", wrist.wrist.getPosition());
         telemetry.addData("Slide Pos", slide.slide.getCurrentPosition());
         telemetry.addData("Slide power: ", gamepad2.right_stick_y);
+
+        telemetry.addData("left stick x", gamepad1.left_stick_x);
+        telemetry.addData("left stick y", gamepad1.left_stick_y);
+        telemetry.addData("right stick x", gamepad1.right_stick_x);
         telemetry.update();
 
 

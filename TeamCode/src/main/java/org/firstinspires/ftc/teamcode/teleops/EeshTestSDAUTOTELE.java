@@ -37,8 +37,8 @@ public class EeshTestSDAUTOTELE extends OpMode {
     boolean autoDriving = false, lifting;
 
     static Pose2d targetPose = new Pose2d(0, 0,0);
-    static double linearGhostingFactor = 0.015;
-    static double angularGhostingFactor = 0.015;
+    static double linearGhostingFactor = 0.3;
+    static double angularGhostingFactor = 0.3;
 
 
     int target = 20;

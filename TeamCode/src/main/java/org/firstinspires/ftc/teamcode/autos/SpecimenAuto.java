@@ -41,43 +41,44 @@ public class SpecimenAuto extends LinearOpMode {
 
         TrajectoryActionBuilder dropSpecimen = drive.actionBuilder(initialPose)
                 .strafeTo(new Vector2d(10, -39))
-                .waitSeconds(0.1);
+                .waitSeconds(0.01);
 
         TrajectoryActionBuilder pickup1 = dropSpecimen.fresh()
                 .strafeTo(new Vector2d(10, -45))
-                .strafeTo(new Vector2d(49.6719, -36.406))
-                .waitSeconds(2);
+                .strafeTo(new Vector2d(49.2, -36))
+                .waitSeconds(0.01);
 
         TrajectoryActionBuilder drop1 = pickup1.fresh()
-                .strafeToLinearHeading(new Vector2d(48.9178, -48), 3*pi/2)
-                .strafeTo(new Vector2d(48.9178, -55.7814))
-                //.strafeTo(new Vector2d(-48, -41))
-                //.strafeToLinearHeading(new Vector2d(-50.1, -50.1), 5*pi/4)
-                //.strafeToLinearHeading(new Vector2d(-54.1, -54.1), 5*pi/4)
-                .waitSeconds(0.1);
+                .strafeToLinearHeading(new Vector2d(48.9178, -52), 3*pi/2)
+                .waitSeconds(0.01);
 
         TrajectoryActionBuilder pickup2 = drop1.fresh()
                 .strafeTo(new Vector2d(48.9178, -48))
-                .strafeToLinearHeading(new Vector2d(59.892, -37.32), pi/2)
-                .waitSeconds(0.1);
+                .strafeToLinearHeading(new Vector2d(59.892, -36), pi/2)
+                .waitSeconds(0.01);
 
         TrajectoryActionBuilder drop2  = pickup2.fresh()
                 .strafeToLinearHeading(new Vector2d(48, -48), 3*pi/2)
-                .strafeTo(new Vector2d(48, -55.7814))
-                .waitSeconds(0.1);
+                .strafeTo(new Vector2d(48, -54.9))
+                .waitSeconds(0.01);
 
         TrajectoryActionBuilder score1 = drop2.fresh()
-                .strafeToLinearHeading(new Vector2d(0, -45), pi/2)
-                .strafeTo(new Vector2d(0, -39))
-                .waitSeconds(0.1);
+                .strafeToLinearHeading(new Vector2d(4, -45), pi/2)
+                .strafeTo(new Vector2d(4, -39))
+                .waitSeconds(0.01);
 
 
 
         TrajectoryActionBuilder drop3 = score1.fresh()
                 .strafeToLinearHeading(new Vector2d(48.9178, -48), 3*pi/2)
-                .strafeTo(new Vector2d(48.9178, -55.7814));
+                .strafeTo(new Vector2d(48.9178, -54.2))
+                .waitSeconds(0.1);
 
 
+        TrajectoryActionBuilder score2 = drop3.fresh()
+                .strafeToLinearHeading(new Vector2d(-2, -45), pi/2)
+                .strafeTo(new Vector2d(-2, -39.1))
+                .waitSeconds(0.01);
 
 
         waitForStart();
@@ -95,15 +96,15 @@ public class SpecimenAuto extends LinearOpMode {
                 new SleepAction(0.35),
                 claw.open(),
                 new SleepAction(0.2),
-                wrist.wristHigh(),
-                slide.liftBottom(),
-                new ParallelAction(
-                        pickup1.build(),
-                        new SequentialAction(
-                                new SleepAction(0.3),
-                                wrist.wristPickup()
-                        )
-                ),
+                        new ParallelAction(
+                                wrist.wristHigh(),
+                                pickup1.build(),
+                                slide.liftBottom(),
+                                new SequentialAction(
+                                        new SleepAction(0.5),
+                                        wrist.wristPickup()
+                                )
+                        ),
                 claw.close(),
                 new SleepAction(0.5),
                 new ParallelAction(
@@ -112,16 +113,16 @@ public class SpecimenAuto extends LinearOpMode {
                 ),
                 claw.open(),
                 new SleepAction(0.2),
-                pickup2.build(),
                 slide.liftBottom(),
+                pickup2.build(),
                 claw.close(),
                 new SleepAction(0.5),
                 new InstantAction(() -> slide.runToPos(50)),
                 drop2.build(),
                 claw.open(),
-                new SleepAction(0.2),
+                new SleepAction(0.5),
                 wrist.wristSpecimen(),
-                new SleepAction(0.4),
+                new SleepAction(0.7),
                 claw.close(),
                 new SleepAction(0.5),
                 new ParallelAction(
@@ -134,7 +135,24 @@ public class SpecimenAuto extends LinearOpMode {
                 new SleepAction(0.35),
                 claw.open(),
                 new SleepAction(0.5),
-                drop3.build()
+                new InstantAction(() -> slide.runToPos(50)),
+                new ParallelAction(
+                        drop3.build(),
+                        new SequentialAction(
+                                new SleepAction(0.5),
+                                wrist.wristSpecimen()
+                        )
+                ),
+                claw.close(),
+                new SleepAction(0.5),
+                new InstantAction(() -> slide.runToPos(100)),
+                wrist.wristHigh(),
+                score2.build(),
+                slide.highRung(),
+                new SleepAction(0.7),
+                wrist.highRung(),
+                new SleepAction(0.35),
+                claw.open()
                 ))
         );
     }
