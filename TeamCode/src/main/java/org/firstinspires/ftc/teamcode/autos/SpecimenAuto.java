@@ -39,45 +39,45 @@ public class SpecimenAuto extends LinearOpMode {
         double pi = Math.PI;
 
 
-        TrajectoryActionBuilder dropSpecimen = drive.actionBuilder(initialPose)
+        TrajectoryActionBuilder dropSpecimen = drive.actionBuilder(drive.pose)
                 .strafeTo(new Vector2d(10, -39))
                 .waitSeconds(0.01);
 
         TrajectoryActionBuilder pickup1 = dropSpecimen.fresh()
                 .strafeTo(new Vector2d(10, -45))
-                .strafeTo(new Vector2d(49.2, -36))
+                .strafeTo(new Vector2d(49.2, -36.6))
                 .waitSeconds(0.01);
 
         TrajectoryActionBuilder drop1 = pickup1.fresh()
-                .strafeToLinearHeading(new Vector2d(48.9178, -52), 3*pi/2)
+                .strafeToLinearHeading(new Vector2d(48.9178, -53.7), 3*pi/2)
                 .waitSeconds(0.01);
 
         TrajectoryActionBuilder pickup2 = drop1.fresh()
                 .strafeTo(new Vector2d(48.9178, -48))
-                .strafeToLinearHeading(new Vector2d(59.892, -36), pi/2)
+                .strafeToLinearHeading(new Vector2d(59.892, -37), pi/2)
                 .waitSeconds(0.01);
 
         TrajectoryActionBuilder drop2  = pickup2.fresh()
                 .strafeToLinearHeading(new Vector2d(48, -48), 3*pi/2)
-                .strafeTo(new Vector2d(48, -54.9))
+                .strafeTo(new Vector2d(48, -55.7))
                 .waitSeconds(0.01);
 
         TrajectoryActionBuilder score1 = drop2.fresh()
                 .strafeToLinearHeading(new Vector2d(4, -45), pi/2)
-                .strafeTo(new Vector2d(4, -39))
+                .strafeTo(new Vector2d(4, -38.2))
                 .waitSeconds(0.01);
 
 
 
         TrajectoryActionBuilder drop3 = score1.fresh()
                 .strafeToLinearHeading(new Vector2d(48.9178, -48), 3*pi/2)
-                .strafeTo(new Vector2d(48.9178, -54.2))
+                .strafeTo(new Vector2d(48.9178, -55.2))
                 .waitSeconds(0.1);
 
 
         TrajectoryActionBuilder score2 = drop3.fresh()
                 .strafeToLinearHeading(new Vector2d(-2, -45), pi/2)
-                .strafeTo(new Vector2d(-2, -39.1))
+                .strafeTo(new Vector2d(-2, -38.3))
                 .waitSeconds(0.01);
 
 
@@ -87,15 +87,15 @@ public class SpecimenAuto extends LinearOpMode {
         Actions.runBlocking(
                 new ParallelAction(
                         slide.setPow(),
-                new SequentialAction(
-                wrist.wristHigh(),
-                claw.close(),
-                slide.highRung(),
-                dropSpecimen.build(),
-                wrist.highRung(),
-                new SleepAction(0.35),
-                claw.open(),
-                new SleepAction(0.2),
+                        new SequentialAction(
+                                wrist.wristHigh(),
+                                claw.close(),
+                                slide.highRung(),
+                                dropSpecimen.build(),
+                                wrist.highRung(),
+                                new SleepAction(0.35),
+                                claw.open(),
+                                new SleepAction(0.2),
                         new ParallelAction(
                                 wrist.wristHigh(),
                                 pickup1.build(),

@@ -76,9 +76,14 @@ public class BasketAuto extends LinearOpMode {
                 .waitSeconds(0.1);
 
 
+
         // x -26.3912 y 53.7334
         TrajectoryActionBuilder park = backup.fresh()
-                        .strafeToLinearHeading(new Vector2d(-36.3912, -10.766), 0);
+                        .strafeToLinearHeading(new Vector2d(-36.3912, -10.766), 0)
+                .waitSeconds(0.1);
+
+        TrajectoryActionBuilder park2 = park.fresh()
+                        .strafeTo(new Vector2d(-21, -10.766));
 
         waitForStart();
         if (isStopRequested()) return;
@@ -164,8 +169,12 @@ public class BasketAuto extends LinearOpMode {
                         slide.liftBottom(),
                         new ParallelAction(
                               park.build(),
-                              wrist.wristPickup()
-                        )
+                              wrist.wristHigh()
+                        ),
+                        new InstantAction(() -> slide.runToPos(1270)),
+                        new SleepAction(0.3),
+                         park2.build(),
+                         new InstantAction(() -> slide.runToPos(1030))
                     )
                 )
 

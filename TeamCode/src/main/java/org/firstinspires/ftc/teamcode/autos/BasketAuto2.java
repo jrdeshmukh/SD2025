@@ -12,6 +12,7 @@ import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.VelConstraint;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.MecanumDrive;
@@ -21,6 +22,7 @@ import org.firstinspires.ftc.teamcode.wrappers.Wrist;
 
 import java.util.Arrays;
 
+@Disabled
 @Autonomous()
 public class BasketAuto2 extends LinearOpMode {
     @Override
