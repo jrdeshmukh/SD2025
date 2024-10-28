@@ -15,6 +15,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.MecanumDrive;
+import org.firstinspires.ftc.teamcode.backtracking.Drive;
 import org.firstinspires.ftc.teamcode.wrappers.Claw;
 import org.firstinspires.ftc.teamcode.wrappers.Slide;
 import org.firstinspires.ftc.teamcode.wrappers.Wrist;
@@ -26,7 +27,7 @@ public class BasketAuto extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         Pose2d initialPose = new Pose2d(-10, -64.5, Math.toRadians(90));
-        MecanumDrive drive = new MecanumDrive(hardwareMap, initialPose);
+        Drive drive = new Drive(hardwareMap, initialPose);
         Claw claw = new Claw(hardwareMap);
         Wrist wrist = new Wrist(hardwareMap);
         Slide slide = new Slide(hardwareMap);
@@ -38,42 +39,42 @@ public class BasketAuto extends LinearOpMode {
 
         TrajectoryActionBuilder toSpecimen = drive.actionBuilder(drive.pose)
                 .strafeTo(new Vector2d(-10, -39))
-                .waitSeconds(0.1);
+                .waitSeconds(0.01);
 
 
 
         TrajectoryActionBuilder toFirst = toSpecimen.fresh()
                 .strafeTo(new Vector2d(-10, -45))
                 .strafeTo(new Vector2d(-49, -36.5))
-                .waitSeconds(0.1);
+                .waitSeconds(0.01);
 
         TrajectoryActionBuilder toBasket1 = toFirst.fresh()
                 .strafeTo(new Vector2d(-48, -41))
                 //.strafeToLinearHeading(new Vector2d(-50.1, -50.1), 5*pi/4)
                 .strafeToLinearHeading(new Vector2d(-54.6, -54.6), 5*pi/4)
-                .waitSeconds(0.1);
+                .waitSeconds(0.01);
 
         TrajectoryActionBuilder toSecond = toBasket1.fresh()
                 //.strafeTo(new Vector2d(-50.1, -50.1))
                 .strafeToLinearHeading(new Vector2d(-59, -36.5), pi/2)
-                .waitSeconds(0.1);
+                .waitSeconds(0.01);
 
         TrajectoryActionBuilder toBasket2 = toSecond.fresh()
                 .strafeTo(new Vector2d(-58.5, -41))
                 //.strafeToLinearHeading(new Vector2d(-50.1, -50.1), 5*pi/4)
                 .strafeToLinearHeading(new Vector2d(-54.1, -54.1), 5*pi/4)
-                .waitSeconds(0.1);
+                .waitSeconds(0.01);
 
         TrajectoryActionBuilder toThird = toBasket2.fresh()
                 .strafeTo(new Vector2d(-50.1, -50.1))
                 .strafeToLinearHeading(new Vector2d(-59.5, -26.5), pi)
-                .waitSeconds(0.1);
+                .waitSeconds(0.01);
 
         TrajectoryActionBuilder backup = toThird.fresh()
                 .strafeTo(new Vector2d(-55, -26.9))
                // .strafeToLinearHeading(new Vector2d(-50.1, -50.1), 5*pi/4)
                 .strafeToLinearHeading(new Vector2d(-54.1, -54.1), 5*pi/4)
-                .waitSeconds(0.1);
+                .waitSeconds(0.01);
 
 
 
@@ -90,6 +91,7 @@ public class BasketAuto extends LinearOpMode {
 
         Actions.runBlocking(
                 new ParallelAction(
+                    new InstantAction(() -> drive.updatePoseEstimate()),
                     slide.setPow(),
                     new SequentialAction(
                         wrist.wristHigh(),

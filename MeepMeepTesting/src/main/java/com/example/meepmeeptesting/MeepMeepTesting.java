@@ -36,8 +36,9 @@ public class MeepMeepTesting {
                 .waitSeconds(2);
 
         TrajectoryActionBuilder pickup1 = dropSpecimen.fresh()
-                .strafeTo(new Vector2d(10, -40))
-                .strafeTo(new Vector2d(48, -37.4))
+                //.strafeTo(new Vector2d(10, -40))
+                .setReversed(true)
+                .splineToLinearHeading(new Pose2d(38, -26, 0), pi/2)
                 .waitSeconds(2);
 
         TrajectoryActionBuilder drop1 = pickup1.fresh()

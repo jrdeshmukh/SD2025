@@ -14,7 +14,6 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.MecanumDrive;
-import org.firstinspires.ftc.teamcode.backtracking.Drive;
 import org.firstinspires.ftc.teamcode.wrappers.BBG;
 import org.firstinspires.ftc.teamcode.wrappers.Claw;
 import org.firstinspires.ftc.teamcode.wrappers.Slide;
@@ -24,8 +23,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 @TeleOp()
-public class SDAutoTele extends OpMode {
-    Drive drive;
+public class LimelightTele extends OpMode {
+    MecanumDrive drive;
     Slide slide;
     BBG gp1, gp2;
 
@@ -49,7 +48,7 @@ public class SDAutoTele extends OpMode {
         slide = new Slide(hardwareMap);
         claw = new Claw(hardwareMap);
         wrist = new Wrist(hardwareMap);
-        drive = new Drive(hardwareMap, new Pose2d(-36.3912, -10.766, 0));
+        drive = new MecanumDrive(hardwareMap, new Pose2d(-36.3912, -10.766, 0));
         goAction = claw.close();
         gp2 = new BBG(gamepad2);
         gp1 = new BBG(gamepad1);

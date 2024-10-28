@@ -18,11 +18,11 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.teamcode.messages.ThreeDeadWheelInputsMessage;
 
 @Config
-public final class ThreeDeadWheelLocalizer implements Localizer {
+public class ThreeDeadWheelLocalizer implements Localizer {
     public static class Params {
-        public double par0YTicks = -1917.6472696997068; // y position of the first parallel encoder (in tick units)
-        public double par1YTicks = 2209.0312020014367; //old 2163.422197736612 y position of the second parallel encoder (in tick units)
-        public double perpXTicks = 855.4687688686921; // x position of the perpendicular encoder (in tick units)
+        public double par0YTicks = -1905.2938754983134; // y position of the first parallel encoder (in tick units)
+        public double par1YTicks = 2220.5030579810086; //old 2163.422197736612 y position of the second parallel encoder (in tick units)
+        public double perpXTicks = 775.8441074518839; // x position of the perpendicular encoder (in tick units)
     }
 
     public static Params PARAMS = new Params();
@@ -31,19 +31,15 @@ public final class ThreeDeadWheelLocalizer implements Localizer {
 
     public final double inPerTick;
 
-    private int lastPar0Pos, lastPar1Pos, lastPerpPos;
-    private boolean initialized;
+    public int lastPar0Pos, lastPar1Pos, lastPerpPos;
+    public boolean initialized;
 
     public ThreeDeadWheelLocalizer(HardwareMap hardwareMap, double inPerTick) {
-        // TODO: make sure your config has **motors** with these names (or change them)
-        //   the encoders should be plugged into the slot matching the named motor
-        //   see https://ftc-docs.firstinspires.org/en/latest/hardware_and_software_configuration/configuring/index.html
         par0 = new OverflowEncoder(new RawEncoder(hardwareMap.get(DcMotorEx.class, "fl")));
         par1 = new OverflowEncoder(new RawEncoder(hardwareMap.get(DcMotorEx.class, "br")));
         perp = new OverflowEncoder(new RawEncoder(hardwareMap.get(DcMotorEx.class, "fr")));
 
-        // TODO: reverse encoder directions if needed
-        //   par0.setDirection(DcMotorSimple.Direction.REVERSE);
+
         par0.setDirection(DcMotorSimple.Direction.REVERSE);
         par1.setDirection(DcMotorSimple.Direction.REVERSE);
 
