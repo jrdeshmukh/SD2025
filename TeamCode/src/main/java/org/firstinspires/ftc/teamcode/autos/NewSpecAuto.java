@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.autos;
 import com.acmerobotics.roadrunner.InstantAction;
 import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.Pose2d;
+import com.acmerobotics.roadrunner.Rotation2d;
 import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.SleepAction;
 import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
@@ -43,24 +44,34 @@ public class NewSpecAuto extends LinearOpMode {
         TrajectoryActionBuilder pickup1 = dropSpecimen.fresh()
                 //.strafeTo(new Vector2d(10, -40))
                 .setReversed(true)
-                .splineToLinearHeading(new Pose2d(39, -26.44, 0), pi/2)
-                .waitSeconds(0.001);
+                .splineToLinearHeading(new Pose2d(39, -26, 0), pi/2)
+                .waitSeconds(0.7);
 
         TrajectoryActionBuilder drop1 = pickup1.fresh()
-                .strafeTo(new Vector2d(39, -59))
-                .waitSeconds(0.001);
+                .strafeToLinearHeading(new Vector2d(35, -50), -pi/2)
+                .waitSeconds(0.7);
 
         TrajectoryActionBuilder pickup2 = drop1.fresh()
-                .strafeTo(new Vector2d(39, -40))
-                .strafeTo(new Vector2d(48.87, -26.082))
+                .strafeToLinearHeading(new Vector2d(49, -26), new Rotation2d(3*pi/2, 0))
+                .waitSeconds(0.7);
+
+        TrajectoryActionBuilder drop2 = pickup2.fresh()
+                .strafeToLinearHeading(new Vector2d(35, -50), -pi/2)
+                .waitSeconds(0.7);
+
+        TrajectoryActionBuilder pickupWallSidePixel  = drop2.fresh()
+                .strafeToLinearHeading(new Vector2d(59, -26), new Rotation2d(3*pi/2, 0))
                 .waitSeconds(0.001);
 
-        TrajectoryActionBuilder pickup3  = pickup2.fresh()
-                .strafeToLinearHeading(new Vector2d(48, -55.7), 3*pi/2)
-                .waitSeconds(0.001);
+        TrajectoryActionBuilder dropSideWallPixel = pickupWallSidePixel.fresh()
+                .strafeToLinearHeading(new Vector2d(35, -50), -pi/2)
+                .waitSeconds(0.7);
+
+        TrajectoryActionBuilder pickupSideWall = drop2.fresh()
+                .strafeToLinearHeading(new Vector2d(initialPose.position.x + 45.5, initialPose.position.y + 4.6), new Rotation2d(3*pi/2, 0)).waitSeconds(0.001);
 
 
-        TrajectoryActionBuilder score1 = pickup3.fresh()
+        TrajectoryActionBuilder score1 = pickupSideWall.fresh()
                 .setReversed(true)
                 .splineToSplineHeading(new Pose2d(8, -34, pi/2), pi/2)
                 .waitSeconds(0.001);
@@ -98,6 +109,7 @@ public class NewSpecAuto extends LinearOpMode {
                         new SleepAction(0.2), //try to remove
                         wrist.wristPickup(),
                         slide.liftBottom(),
+
                         pickup1.build(),
                         new SleepAction(0.2),
                         claw.close(),
@@ -105,11 +117,24 @@ public class NewSpecAuto extends LinearOpMode {
                         drop1.build(),
                         new InstantAction(() -> slide.runToPos(50)),
                         claw.open(),
+
                         pickup2.build(),
+                        new SleepAction(0.2),
                         claw.close(),
                         new SleepAction(0.5),
-                        pickup3.build()
+                        drop2.build(),
+                        new InstantAction(() -> slide.runToPos(50)),
+                        claw.open(),
 
+                        pickupWallSidePixel.build(),
+                        new SleepAction(0.2),
+                        claw.close(),
+                        new SleepAction(0.5),
+                        dropSideWallPixel.build(),
+                        new InstantAction(() -> slide.runToPos(50)),
+                        claw.open(),
+                        pickupSideWall.build(),
+                        new SleepAction(0.5)
                 )
             )
         );

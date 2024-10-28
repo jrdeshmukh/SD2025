@@ -46,16 +46,26 @@ public class NewSpecAuto {
                 .waitSeconds(0.7);
 
         TrajectoryActionBuilder pickup2 = drop1.fresh()
-                .strafeTo(new Vector2d(38, -40))
-                .splineToLinearHeading(new Pose2d(48, -26, 0), 0)
+                .strafeToLinearHeading(new Vector2d(48, -26), new Rotation2d(3*pi/2, 0))
                 .waitSeconds(0.7);
 
-        TrajectoryActionBuilder pickup3  = pickup2.fresh()
-                .strafeToLinearHeading(new Vector2d(48, -59), 3*pi/2)
-                .waitSeconds(1.5);
+        TrajectoryActionBuilder drop2 = pickup2.fresh()
+                .strafeTo(new Vector2d(38, -59))
+                .waitSeconds(0.7);
+
+        TrajectoryActionBuilder pickupWallSidePixel  = drop2.fresh()
+                .strafeToLinearHeading(new Vector2d(58, -26), new Rotation2d(3*pi/2, 0))
+                .waitSeconds(0.001);
+
+        TrajectoryActionBuilder dropSideWallPixel = pickupWallSidePixel.fresh()
+                .strafeTo(new Vector2d(38, -59))
+                .waitSeconds(0.7);
+
+        TrajectoryActionBuilder pickupSideWall = drop2.fresh()
+                .strafeToLinearHeading(new Vector2d(initialPose.position.x + 46, initialPose.position.y + 4.6), new Rotation2d(3*pi/2, 0)).waitSeconds(0.001);
 
 
-        TrajectoryActionBuilder score1 = pickup3.fresh()
+        TrajectoryActionBuilder score1 = drop2.fresh()
                 .setReversed(true)
                 .splineToSplineHeading(new Pose2d(8, -34, pi/2), pi/2)
                 .waitSeconds(2);
@@ -79,11 +89,10 @@ public class NewSpecAuto {
                         pickup1.build(),
                         drop1.build(),
                         pickup2.build(),
-                        pickup3.build(),
-                        score1.build(),
-                        picup2.build(),
-                        score3.build(),
-                        pickup5.build()
+                        drop2.build(),
+                        pickupWallSidePixel.build(),
+                        dropSideWallPixel.build(),
+                        pickupSideWall.build()
 
                 )
         );
