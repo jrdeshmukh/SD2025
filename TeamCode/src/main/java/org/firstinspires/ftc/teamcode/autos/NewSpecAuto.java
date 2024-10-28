@@ -17,7 +17,7 @@ import org.firstinspires.ftc.teamcode.backtracking.MecDrive;
 import org.firstinspires.ftc.teamcode.wrappers.Claw;
 import org.firstinspires.ftc.teamcode.wrappers.Slide;
 import org.firstinspires.ftc.teamcode.wrappers.Wrist;
-
+//hi
 @Autonomous()
 public class NewSpecAuto extends LinearOpMode {
     @Override
