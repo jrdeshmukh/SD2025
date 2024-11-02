@@ -14,8 +14,7 @@ import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import org.firstinspires.ftc.teamcode.MecanumDrive;
-import org.firstinspires.ftc.teamcode.backtracking.Drive;
+import org.firstinspires.ftc.teamcode.backtracking.MecDrive;
 import org.firstinspires.ftc.teamcode.wrappers.Claw;
 import org.firstinspires.ftc.teamcode.wrappers.Slide;
 import org.firstinspires.ftc.teamcode.wrappers.Wrist;
@@ -27,7 +26,7 @@ public class BasketAuto extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         Pose2d initialPose = new Pose2d(-10, -64.5, Math.toRadians(90));
-        Drive drive = new Drive(hardwareMap, initialPose);
+        MecDrive drive = new MecDrive(hardwareMap, initialPose);
         Claw claw = new Claw(hardwareMap);
         Wrist wrist = new Wrist(hardwareMap);
         Slide slide = new Slide(hardwareMap);
