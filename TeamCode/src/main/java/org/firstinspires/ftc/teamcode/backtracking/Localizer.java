@@ -86,9 +86,9 @@ public class Localizer extends ThreeDeadWheelLocalizer {
             );
         }
 
-        int par0PosDelta = par0PosVel.position - lastPar0Pos;
-        int par1PosDelta = par1PosVel.position - lastPar1Pos;
-        int perpPosDelta = perpPosVel.position - lastPerpPos;
+        double par0PosDelta = par0PosVel.position - lastPar0Pos;
+        double par1PosDelta = par1PosVel.position - lastPar1Pos;
+        double perpPosDelta = perpPosVel.position - lastPerpPos;
 
         double deadWheelHeadingDelta = (par0PosDelta - par1PosDelta) / (PARAMS.par0YTicks - PARAMS.par1YTicks);
         double axial = (PARAMS.par0YTicks * par1PosDelta - PARAMS.par1YTicks * par0PosDelta) / (PARAMS.par0YTicks - PARAMS.par1YTicks);
