@@ -13,6 +13,7 @@ import org.firstinspires.ftc.teamcode.MecanumDrive;
 import org.firstinspires.ftc.teamcode.TankDrive;
 import org.firstinspires.ftc.teamcode.backtracking.Drive;
 import org.firstinspires.ftc.teamcode.backtracking.MecDrive;
+import org.firstinspires.ftc.teamcode.wrappers.PinpointDrive;
 
 public class LocalizationTest extends LinearOpMode {
     @Override
@@ -20,7 +21,7 @@ public class LocalizationTest extends LinearOpMode {
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
         if (TuningOpModes.DRIVE_CLASS.equals(MecanumDrive.class)) {
-            MecDrive drive = new MecDrive(hardwareMap, new Pose2d(0, 0, Math.PI/2));
+            PinpointDrive drive = new PinpointDrive(hardwareMap, new Pose2d(-10, -64.5, Math.toRadians(90)));
 
             waitForStart();
 
