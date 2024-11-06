@@ -10,7 +10,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 public class Claw {
     public Servo claw;
 
-    public static final double OPEN = 1, CLOSE = 0.67;
+    public static final double OPEN = 0.47, CLOSE = 0.05;
 
     public Claw(HardwareMap map) {
         claw = map.servo.get("claw");
@@ -23,7 +23,7 @@ public class Claw {
     public class ClawClose implements Action {
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            claw.setPosition(0.39);
+            claw.setPosition(CLOSE);
             return false;
         }
     }
@@ -33,7 +33,7 @@ public class Claw {
     public class ClawOpen implements Action {
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            claw.setPosition(0.81);
+            claw.setPosition(OPEN);
             return false;
         }
     }
