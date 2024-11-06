@@ -37,43 +37,48 @@ public class NewSpecAuto extends LinearOpMode {
         double pi = Math.PI;
 
 
-        TrajectoryActionBuilder dropSpecimen = drive.actionBuilder(drive.pose)
-                .strafeTo(new Vector2d(10, -40.85))
-                .waitSeconds(0.001);
 
-        TrajectoryActionBuilder pickup1 = dropSpecimen.fresh()
+        TrajectoryActionBuilder pickup1 = drive.actionBuilder(drive.pose)
                 //.strafeTo(new Vector2d(10, -40))
-                .setReversed(true)
-                .splineToLinearHeading(new Pose2d(39, -26, 0), pi/2)
+                .strafeToLinearHeading(new Vector2d(40, -26.5), new Rotation2d(3*pi/2, 0))
                 .waitSeconds(0.7);
 
         TrajectoryActionBuilder drop1 = pickup1.fresh()
-                .strafeToLinearHeading(new Vector2d(35, -50), -pi/2)
+                .strafeToLinearHeading(new Vector2d(44, -54), -pi/2)
                 .waitSeconds(0.7);
 
         TrajectoryActionBuilder pickup2 = drop1.fresh()
-                .strafeToLinearHeading(new Vector2d(49, -26), new Rotation2d(3*pi/2, 0))
+                .strafeToLinearHeading(new Vector2d(50, -26.5), new Rotation2d(3*pi/2, 0))
                 .waitSeconds(0.7);
 
         TrajectoryActionBuilder drop2 = pickup2.fresh()
-                .strafeToLinearHeading(new Vector2d(35, -50), -pi/2)
+                .strafeToLinearHeading(new Vector2d(44, -54), -pi/2)
                 .waitSeconds(0.7);
 
         TrajectoryActionBuilder pickupWallSidePixel  = drop2.fresh()
-                .strafeToLinearHeading(new Vector2d(59, -26), new Rotation2d(3*pi/2, 0))
+                .strafeToLinearHeading(new Vector2d(60, -27), new Rotation2d(3*pi/2, 0))
                 .waitSeconds(0.001);
 
         TrajectoryActionBuilder dropSideWallPixel = pickupWallSidePixel.fresh()
-                .strafeToLinearHeading(new Vector2d(35, -50), -pi/2)
+                .strafeToLinearHeading(new Vector2d(44, -51), (-pi/2)*1.1)
                 .waitSeconds(0.7);
 
-        TrajectoryActionBuilder pickupSideWall = drop2.fresh()
+        TrajectoryActionBuilder pickupSideWall = pickupWallSidePixel.fresh()
                 .strafeToLinearHeading(new Vector2d(initialPose.position.x + 45.5, initialPose.position.y + 4.6), new Rotation2d(3*pi/2, 0)).waitSeconds(0.001);
 
 
-        TrajectoryActionBuilder score1 = pickupSideWall.fresh()
+        TrajectoryActionBuilder dropSpecimen = pickupSideWall.fresh()
                 .setReversed(true)
-                .splineToSplineHeading(new Pose2d(8, -34, pi/2), pi/2)
+                .splineToSplineHeading(new Pose2d(10, -41.35, pi/2), pi/2)
+                .waitSeconds(0.001);
+
+        TrajectoryActionBuilder pickupSideWallAfterDropSpecimen = dropSpecimen.fresh()
+                .strafeToLinearHeading(new Vector2d(initialPose.position.x + 45.5, initialPose.position.y + 4.6), new Rotation2d(3*pi/2, 0)).waitSeconds(0.001);
+
+
+        TrajectoryActionBuilder score1 = pickupSideWallAfterDropSpecimen.fresh()
+                .setReversed(true)
+                .splineToSplineHeading(new Pose2d(8, -41.35, pi/2), pi/2)
                 .waitSeconds(0.001);
 
         TrajectoryActionBuilder picup2 = score1.fresh()
@@ -97,6 +102,47 @@ public class NewSpecAuto extends LinearOpMode {
                 new ParallelAction(
                 slide.setPow(),
                 new SequentialAction(
+                        wrist.wristPickup(),
+                        slide.liftBottom(),
+                        pickup1.build(),
+                        //new SleepAction(0.2),
+                        claw.close(),
+                        new SleepAction(0.5),
+                        new InstantAction(() -> slide.runToPos(75)),
+                        drop1.build(),
+                        claw.open(),
+
+                        wrist.wristPickup(),
+                        slide.liftBottom(),
+                        pickup2.build(),
+                        //new SleepAction(0.2),
+                        claw.close(),
+                        new SleepAction(0.5),
+                        new InstantAction(() -> slide.runToPos(75)),
+                        drop2.build(),
+                        claw.open(),
+
+                        wrist.wristPickup(),
+                        slide.liftBottom(),
+                        pickupWallSidePixel.build(),
+                        //new SleepAction(0.2),
+                        claw.close(),
+
+                        new SleepAction(0.5),
+                        new InstantAction(() -> slide.runToPos(75)),
+
+
+                        pickupSideWall.build(),
+                        claw.open(),
+                        wrist.wristSpecimen(),
+                        new InstantAction(() -> slide.runToPos(50)),
+                    //    new SleepAction(0.5),
+
+                        claw.close(),
+                        new SleepAction(0.5),
+                        new InstantAction(() -> slide.runToPos(100)),
+                        wrist.wristHigh(),
+
                         new ParallelAction(
                                 dropSpecimen.build(),
                                 claw.close(),
@@ -110,31 +156,25 @@ public class NewSpecAuto extends LinearOpMode {
                         wrist.wristPickup(),
                         slide.liftBottom(),
 
-                        pickup1.build(),
-                        new SleepAction(0.2),
-                        claw.close(),
-                        new SleepAction(0.5),
-                        drop1.build(),
+                        wrist.wristSpecimen(),
                         new InstantAction(() -> slide.runToPos(50)),
                         claw.open(),
+                        pickupSideWallAfterDropSpecimen.build(),
+                        claw.close(),
+                        new SleepAction(0.5),
 
-                        pickup2.build(),
-                        new SleepAction(0.2),
-                        claw.close(),
-                        new SleepAction(0.5),
-                        drop2.build(),
-                        new InstantAction(() -> slide.runToPos(50)),
-                        claw.open(),
 
-                        pickupWallSidePixel.build(),
-                        new SleepAction(0.2),
-                        claw.close(),
-                        new SleepAction(0.5),
-                        dropSideWallPixel.build(),
-                        new InstantAction(() -> slide.runToPos(50)),
+                        new ParallelAction(
+                                score1.build(),
+                                new InstantAction(() -> slide.runToPos(1570)),
+                                new InstantAction(() -> wrist.setPosition(0.5))
+                        ),
+                        new InstantAction(() -> slide.runToPos(910)),
+                        new SleepAction(0.35),
                         claw.open(),
-                        pickupSideWall.build(),
-                        new SleepAction(0.5)
+                        new SleepAction(0.2), //try to remove
+                        wrist.wristPickup(),
+                        slide.liftBottom()
                 )
             )
         );
