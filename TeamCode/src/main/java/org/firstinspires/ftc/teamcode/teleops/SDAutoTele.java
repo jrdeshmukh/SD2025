@@ -143,8 +143,8 @@ public class SDAutoTele extends OpMode {
         }
 
 
-        if (gp2.right_bumper())                        claw.setPosition(0.81); //open
-        if (gp2.left_bumper())                         claw.setPosition(0.39); //close
+        if (gp2.right_bumper())                        claw.open(); //open
+        if (gp2.left_bumper())                         claw.close(); //close
 
         if (gamepad2.left_trigger>0.01)                wrist.setPosition(Wrist.HIGH); //straight up
         if (gamepad2.right_trigger>0.01)               wrist.setPosition(Wrist.PICKUP); //pickup
