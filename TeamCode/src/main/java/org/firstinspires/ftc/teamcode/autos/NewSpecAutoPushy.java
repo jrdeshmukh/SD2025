@@ -38,9 +38,13 @@ public class NewSpecAutoPushy extends LinearOpMode {
         double pi = Math.PI;
 
 
-        TrajectoryActionBuilder dropSpecimen = drive.actionBuilder(drive.pose)
+       /* TrajectoryActionBuilder dropSpecimen = drive.actionBuilder(drive.pose)
                 .strafeTo(new Vector2d(10, -40.85))
+                .waitSeconds(0.001);*/
+        TrajectoryActionBuilder dropSpecimen = drive.actionBuilder(drive.pose)
+                .strafeTo(new Vector2d(10.3438, -41.4829))
                 .waitSeconds(0.001);
+
 
 
         TrajectoryActionBuilder dropAll = dropSpecimen.fresh()
@@ -55,40 +59,44 @@ public class NewSpecAutoPushy extends LinearOpMode {
                 .waitSeconds(0.001);
 
 
+       /* TrajectoryActionBuilder pickupSideWall = dropAll.fresh()
+                .strafeToLinearHeading(new Vector2d(initialPose.position.x + 46, initialPose.position.y + 4.6), new Rotation2d(3*pi/2, 0)).waitSeconds(0.001);*/
+
         TrajectoryActionBuilder pickupSideWall = dropAll.fresh()
-                .strafeToLinearHeading(new Vector2d(initialPose.position.x + 46, initialPose.position.y + 4.6), new Rotation2d(3*pi/2, 0)).waitSeconds(0.001);
+                .strafeToLinearHeading(new Vector2d(34.6481, -55.6504), new Rotation2d(3*pi/2, 0)).waitSeconds(0.001);
+
 
 
         TrajectoryActionBuilder scoreFirstPickup = pickupSideWall.fresh()
                 .setReversed(true)
-                .strafeToLinearHeading(new Vector2d(8, -41.35), initialPose.heading)
+                .strafeToLinearHeading(new Vector2d(5.3438, -41.4829), initialPose.heading)
                 .waitSeconds(0.001);
 
         TrajectoryActionBuilder pickupSideWallAfterScoreOne = scoreFirstPickup.fresh()
-                .strafeToLinearHeading(new Vector2d(initialPose.position.x + 46, initialPose.position.y + 4.6), new Rotation2d(3*pi/2, 0)).waitSeconds(0.001);
+                .strafeToLinearHeading(new Vector2d(34.6481, -55.6504), new Rotation2d(3*pi/2, 0)).waitSeconds(0.001);
 
 
         TrajectoryActionBuilder scoreSecondPickup = pickupSideWallAfterScoreOne.fresh()
                 .setReversed(true)
-                .strafeToLinearHeading(new Vector2d(6, -41.85), initialPose.heading)
+                .strafeToLinearHeading(new Vector2d(0.3438, -41.4829), initialPose.heading)
                 .waitSeconds(0.001);
 
         TrajectoryActionBuilder pickupSideWallAfterScoreTwo = scoreSecondPickup.fresh()
-                .strafeToLinearHeading(new Vector2d(initialPose.position.x + 46, initialPose.position.y + 4.6), new Rotation2d(3*pi/2, 0)).waitSeconds(0.001);
+                .strafeToLinearHeading(new Vector2d(34.6481, -55.6504), new Rotation2d(3*pi/2, 0)).waitSeconds(0.001);
 
 
         TrajectoryActionBuilder scoreThirdPickup = pickupSideWallAfterScoreTwo.fresh()
                 .setReversed(true)
-                .strafeToLinearHeading(new Vector2d(4, -42.35), initialPose.heading)
+                .strafeToLinearHeading(new Vector2d(-5.3438, -41.4829), initialPose.heading)
                 .waitSeconds(0.001);
 
         TrajectoryActionBuilder pickupSideWallAfterScoreThree = scoreThirdPickup.fresh()
-                .strafeToLinearHeading(new Vector2d(initialPose.position.x + 46, initialPose.position.y + 4.6), new Rotation2d(3*pi/2, 0)).waitSeconds(0.001);
+                .strafeToLinearHeading(new Vector2d(34.6481, -55.6504), new Rotation2d(3*pi/2, 0)).waitSeconds(0.001);
 
 
         TrajectoryActionBuilder scoreFourthPickup = pickupSideWallAfterScoreThree.fresh()
                 .setReversed(true)
-                .strafeToLinearHeading(new Vector2d(2, -42.85), initialPose.heading)
+                .strafeToLinearHeading(new Vector2d(-10.3438, -41.4829), initialPose.heading)
                 .waitSeconds(0.001);
 
 
@@ -100,6 +108,7 @@ public class NewSpecAutoPushy extends LinearOpMode {
                         slide.setPow(),
                         new SequentialAction(
                                 new ParallelAction(
+                                        wrist.wristHigh(),
                                         dropSpecimen.build(),
                                         claw.close(),
                                         new InstantAction(() -> slide.runToPos(1570)),
