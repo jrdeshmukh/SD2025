@@ -37,36 +37,36 @@ public class BasketAuto extends LinearOpMode {
         ));
 
         TrajectoryActionBuilder toSpecimen = drive.actionBuilder(drive.pose)
-                .strafeTo(new Vector2d(-10, -39))
+                .strafeTo(new Vector2d(-10, -41.77))
                 .waitSeconds(0.01);
 
 
 
         TrajectoryActionBuilder toFirst = toSpecimen.fresh()
                 .strafeTo(new Vector2d(-10, -45))
-                .strafeTo(new Vector2d(-49, -36.5))
+                .strafeTo(new Vector2d(-49.2, -36.38))
                 .waitSeconds(0.01);
 
         TrajectoryActionBuilder toBasket1 = toFirst.fresh()
                 .strafeTo(new Vector2d(-48, -41))
                 //.strafeToLinearHeading(new Vector2d(-50.1, -50.1), 5*pi/4)
-                .strafeToLinearHeading(new Vector2d(-54.6, -54.6), 5*pi/4)
+                .strafeToLinearHeading(new Vector2d(-50.08, -52.2), 5*pi/4)
                 .waitSeconds(0.01);
 
         TrajectoryActionBuilder toSecond = toBasket1.fresh()
                 //.strafeTo(new Vector2d(-50.1, -50.1))
-                .strafeToLinearHeading(new Vector2d(-59, -36.5), pi/2)
+                .strafeToLinearHeading(new Vector2d(-59.5, -36.7), pi/2)
                 .waitSeconds(0.01);
 
         TrajectoryActionBuilder toBasket2 = toSecond.fresh()
                 .strafeTo(new Vector2d(-58.5, -41))
                 //.strafeToLinearHeading(new Vector2d(-50.1, -50.1), 5*pi/4)
-                .strafeToLinearHeading(new Vector2d(-54.1, -54.1), 5*pi/4)
+                .strafeToLinearHeading(new Vector2d(-50.08, -52.2), 5*pi/4)
                 .waitSeconds(0.01);
 
         TrajectoryActionBuilder toThird = toBasket2.fresh()
                 .strafeTo(new Vector2d(-50.1, -50.1))
-                .strafeToLinearHeading(new Vector2d(-59.5, -26.5), pi)
+                .strafeToLinearHeading(new Vector2d(-54.96, -25.9717), pi)
                 .waitSeconds(0.01);
 
         TrajectoryActionBuilder backup = toThird.fresh()
