@@ -57,7 +57,7 @@ public class CalibrationTele extends OpMode {
 
         double clawPos = claw.claw.getPosition();
         double wristPos = wrist.wrist.getPosition();
-        double increment = 0.03;
+        double increment = 0.01;
 
         if(gp2.dpad_down()) {
             wrist.setPosition(wristPos - increment);

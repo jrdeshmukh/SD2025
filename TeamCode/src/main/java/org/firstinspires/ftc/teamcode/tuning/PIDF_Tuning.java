@@ -15,7 +15,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 public class PIDF_Tuning extends OpMode {
 
     public PIDController controller;
-    public static double p=0.007,i=0,d=0.0005,f=0.00005;
+    public static double p=0.015,i=0,d=0.0003,f=0.00005;
     public DcMotorEx motor;
     public final int MAX_POS = 3250;
 
@@ -34,11 +34,6 @@ public class PIDF_Tuning extends OpMode {
 
     }
     public void loop() {
-        if(target > MAX_POS)
-            target = MAX_POS;
-        if(target < 20) {
-            target = 20;
-        }
         controller.setPID(p,i,d);
         int pos = motor.getCurrentPosition();
         double pid = controller.calculate(pos, target);
