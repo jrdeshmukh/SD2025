@@ -42,62 +42,85 @@ public class NewSpecAutoPushy extends LinearOpMode {
                 .strafeTo(new Vector2d(10, -40.85))
                 .waitSeconds(0.001);*/
         TrajectoryActionBuilder dropSpecimen = drive.actionBuilder(drive.pose)
-                .strafeTo(new Vector2d(10.3438, -41.4829))
+                .strafeTo(new Vector2d(10, -41.1))
                 .waitSeconds(0.001);
 
 
 
         TrajectoryActionBuilder dropAll = dropSpecimen.fresh()
-                .strafeToConstantHeading(new Vector2d(27.5, -45))
-                .splineToConstantHeading(new Vector2d(47.5, -10), 0)
-                .strafeToConstantHeading(new Vector2d(47.5, -60))
-                .splineToConstantHeading(new Vector2d(57.5, -10), 0)
-                .strafeToConstantHeading(new Vector2d(57.5, -60))
+                .strafeToConstantHeading(new Vector2d(34, -38))
+                .strafeToConstantHeading(new Vector2d(34, -12))
+                .strafeToConstantHeading(new Vector2d(47.5, -12))
+                .strafeToConstantHeading(new Vector2d(47.5, -51))
+                .strafeToConstantHeading(new Vector2d(50, -12))
+                .strafeToConstantHeading(new Vector2d(57.6, -12))
+                .strafeToConstantHeading(new Vector2d(57.6, -54))
                 // .splineToConstantHeading(new Vector2d(50, -27), pi)
                 //.splineToLinearHeading(new Pose2d(new Vector2d(60, -27), new Rotation2d(pi/2, 0)), 0)
-                .strafeToLinearHeading(new Vector2d(60, -27), new Rotation2d(pi/2, 0))
+                .strafeToLinearHeading(new Vector2d(58.5, -22.86), new Rotation2d(pi/2, 0))
                 .waitSeconds(0.001);
+
 
 
        /* TrajectoryActionBuilder pickupSideWall = dropAll.fresh()
                 .strafeToLinearHeading(new Vector2d(initialPose.position.x + 46, initialPose.position.y + 4.6), new Rotation2d(3*pi/2, 0)).waitSeconds(0.001);*/
 
         TrajectoryActionBuilder pickupSideWall = dropAll.fresh()
-                .strafeToLinearHeading(new Vector2d(34.6481, -55.6504), new Rotation2d(3*pi/2, 0)).waitSeconds(0.001);
+                .strafeToLinearHeading(new Vector2d(54.4, -55.17), new Rotation2d(3*pi/2, 0)).waitSeconds(0.001);
+
+        TrajectoryActionBuilder pickupSideWallNew = dropAll.fresh()
+                .strafeToLinearHeading(new Vector2d(42, -49.8), -pi/2).waitSeconds(0.001);
 
 
 
-        TrajectoryActionBuilder scoreFirstPickup = pickupSideWall.fresh()
+        TrajectoryActionBuilder scoreFirstPickup = pickupSideWallNew.fresh()
                 .setReversed(true)
-                .strafeToLinearHeading(new Vector2d(5.3438, -41.4829), initialPose.heading)
+                .strafeToLinearHeading(new Vector2d(7, -41.1), initialPose.heading)
                 .waitSeconds(0.001);
 
         TrajectoryActionBuilder pickupSideWallAfterScoreOne = scoreFirstPickup.fresh()
-                .strafeToLinearHeading(new Vector2d(34.6481, -55.6504), new Rotation2d(3*pi/2, 0)).waitSeconds(0.001);
+                .strafeToLinearHeading(new Vector2d(54.4, -55.17), new Rotation2d(3*pi/2, 0)).waitSeconds(0.001);
+
+        TrajectoryActionBuilder pickupSideWallNewAfterScoreOne = scoreFirstPickup.fresh()
+                .strafeToLinearHeading(new Vector2d(42, -49.8), -pi/2).waitSeconds(0.001);
 
 
-        TrajectoryActionBuilder scoreSecondPickup = pickupSideWallAfterScoreOne.fresh()
+        TrajectoryActionBuilder scoreSecondPickup = pickupSideWallNewAfterScoreOne.fresh()
                 .setReversed(true)
-                .strafeToLinearHeading(new Vector2d(0.3438, -41.4829), initialPose.heading)
+                .strafeToLinearHeading(new Vector2d(4, -41.1), initialPose.heading)
                 .waitSeconds(0.001);
 
         TrajectoryActionBuilder pickupSideWallAfterScoreTwo = scoreSecondPickup.fresh()
-                .strafeToLinearHeading(new Vector2d(34.6481, -55.6504), new Rotation2d(3*pi/2, 0)).waitSeconds(0.001);
+                .strafeToLinearHeading(new Vector2d(54.3, -55.17), new Rotation2d(3*pi/2, 0)).waitSeconds(0.001);
 
 
-        TrajectoryActionBuilder scoreThirdPickup = pickupSideWallAfterScoreTwo.fresh()
+        TrajectoryActionBuilder pickupSideWallNewAfterScoreTwo = scoreSecondPickup.fresh()
+                .strafeToLinearHeading(new Vector2d(42, -49.8), -pi/2).waitSeconds(0.001);
+
+
+        TrajectoryActionBuilder scoreThirdPickup = pickupSideWallNewAfterScoreTwo.fresh()
                 .setReversed(true)
-                .strafeToLinearHeading(new Vector2d(-5.3438, -41.4829), initialPose.heading)
+                .strafeToLinearHeading(new Vector2d(1, -41.1), initialPose.heading)
                 .waitSeconds(0.001);
 
         TrajectoryActionBuilder pickupSideWallAfterScoreThree = scoreThirdPickup.fresh()
-                .strafeToLinearHeading(new Vector2d(34.6481, -55.6504), new Rotation2d(3*pi/2, 0)).waitSeconds(0.001);
+                .strafeToLinearHeading(new Vector2d(54.2, -55.17), new Rotation2d(3*pi/2, 0)).waitSeconds(0.001);
 
 
-        TrajectoryActionBuilder scoreFourthPickup = pickupSideWallAfterScoreThree.fresh()
+        TrajectoryActionBuilder pickupSideWallNewAfterScoreThree = scoreThirdPickup.fresh()
+                .strafeToLinearHeading(new Vector2d(42, -49.8), -pi/2).waitSeconds(0.001);
+
+        TrajectoryActionBuilder scoreFourthPickup = pickupSideWallNewAfterScoreThree.fresh()
                 .setReversed(true)
-                .strafeToLinearHeading(new Vector2d(-10.3438, -41.4829), initialPose.heading)
+                .strafeToLinearHeading(new Vector2d(-2, -41.1), initialPose.heading)
                 .waitSeconds(0.001);
+
+        Actions.runBlocking(
+                new ParallelAction(
+                        wrist.wristHigh(),
+                        claw.close()
+                )
+        );
 
 
         waitForStart();
@@ -107,19 +130,26 @@ public class NewSpecAutoPushy extends LinearOpMode {
                 new ParallelAction(
                         slide.setPow(),
                         new SequentialAction(
+                                wrist.wristSpecimen(),
+                                claw.close(),
                                 new ParallelAction(
-                                        wrist.wristHigh(),
                                         dropSpecimen.build(),
+                                        wrist.wristSpecimen(),
                                         claw.close(),
-                                        new InstantAction(() -> slide.runToPos(1570)),
-                                        new InstantAction(() -> wrist.setPosition(Wrist.SPECIMEN))
+                                        new InstantAction(() -> slide.runToPos(1520))
                                 ),
-                                new InstantAction(() -> slide.runToPos(910)),
-                                new SleepAction(0.35),
+                                new InstantAction(() -> wrist.setPosition(Wrist.SPECIMEN-0.08)),
+                                new InstantAction(() -> claw.setPosition(0.07)),
+                                new SleepAction(0.2),
+                                new InstantAction(() -> slide.runToPos(870)),
+                                new SleepAction(0.5),
                                 claw.open(),
-                                new SleepAction(0.2), //try to remove
+                                new SleepAction(0.2),
                                 wrist.wristPickup(),
                                 slide.liftBottom(),
+
+                                new InstantAction(() -> MecanumDrive.PARAMS.maxWheelVel = 100),
+                                new InstantAction(() -> MecanumDrive.PARAMS.maxProfileAccel = 75),
 
                                 wrist.wristSpecimen(),
                                 new InstantAction(() -> slide.runToPos(50)),
@@ -130,28 +160,32 @@ public class NewSpecAutoPushy extends LinearOpMode {
                                 claw.close(),
 
                                 new SleepAction(0.5),
-                                new InstantAction(() -> slide.runToPos(75)),
+                                new InstantAction(() -> slide.runToPos(120)),
+
+                                new InstantAction(() -> MecanumDrive.PARAMS.maxWheelVel = 60),
 
 
-                                pickupSideWall.build(),
+                                pickupSideWallNew.build(),
                                 claw.open(),
                                 wrist.wristSpecimen(),
-                                new InstantAction(() -> slide.runToPos(50)),
                                 //    new SleepAction(0.5),
+                                new SleepAction(0.5),
 
                                 claw.close(),
-                                new SleepAction(0.5),
-                                new InstantAction(() -> slide.runToPos(100)),
+                                new SleepAction(0.15),
                                 wrist.wristHigh(),
 
                                 new ParallelAction(
                                         scoreFirstPickup.build(),
+                                        wrist.wristSpecimen(),
                                         claw.close(),
-                                        new InstantAction(() -> slide.runToPos(1570)),
-                                        new InstantAction(() -> wrist.setPosition(0.5))
+                                        new InstantAction(() -> slide.runToPos(1520))
                                 ),
-                                new InstantAction(() -> slide.runToPos(910)),
-                                new SleepAction(0.35),
+                                new InstantAction(() -> wrist.setPosition(Wrist.SPECIMEN-0.08)),
+                                new InstantAction(() -> claw.setPosition(0.07)),
+                                new SleepAction(0.2),
+                                new InstantAction(() -> slide.runToPos(870)),
+                                new SleepAction(0.5),
                                 claw.open(),
                                 new SleepAction(0.2), //try to remove
                                 wrist.wristPickup(),
@@ -160,18 +194,23 @@ public class NewSpecAutoPushy extends LinearOpMode {
                                 wrist.wristSpecimen(),
                                 new InstantAction(() -> slide.runToPos(50)),
                                 claw.open(),
-                                pickupSideWallAfterScoreOne.build(),
+                                new InstantAction(() -> slide.runToPos(120)),
+                                pickupSideWallNewAfterScoreOne.build(),
                                 claw.close(),
-                                new SleepAction(0.5),
+                                new SleepAction(0.15),
 
 
                                 new ParallelAction(
                                         scoreSecondPickup.build(),
-                                        new InstantAction(() -> slide.runToPos(1570)),
-                                        new InstantAction(() -> wrist.setPosition(0.5))
+                                        wrist.wristSpecimen(),
+                                        claw.close(),
+                                        new InstantAction(() -> slide.runToPos(1520))
                                 ),
-                                new InstantAction(() -> slide.runToPos(910)),
-                                new SleepAction(0.35),
+                                new InstantAction(() -> wrist.setPosition(Wrist.SPECIMEN-0.08)),
+                                new InstantAction(() -> claw.setPosition(0.07)),
+                                new SleepAction(0.2),
+                                new InstantAction(() -> slide.runToPos(870)),
+                                new SleepAction(0.5),
                                 claw.open(),
                                 new SleepAction(0.2), //try to remove
                                 wrist.wristPickup(),
@@ -182,18 +221,23 @@ public class NewSpecAutoPushy extends LinearOpMode {
                                 wrist.wristSpecimen(),
                                 new InstantAction(() -> slide.runToPos(50)),
                                 claw.open(),
-                                pickupSideWallAfterScoreTwo.build(),
+                                new InstantAction(() -> slide.runToPos(120)),
+                                pickupSideWallNewAfterScoreTwo.build(),
                                 claw.close(),
-                                new SleepAction(0.5),
+                                new SleepAction(0.15),
 
 
                                 new ParallelAction(
                                         scoreThirdPickup.build(),
-                                        new InstantAction(() -> slide.runToPos(1570)),
-                                        new InstantAction(() -> wrist.setPosition(0.5))
+                                        wrist.wristSpecimen(),
+                                        claw.close(),
+                                        new InstantAction(() -> slide.runToPos(1520))
                                 ),
-                                new InstantAction(() -> slide.runToPos(910)),
-                                new SleepAction(0.35),
+                                new InstantAction(() -> wrist.setPosition(Wrist.SPECIMEN-0.08)),
+                                new InstantAction(() -> claw.setPosition(0.07)),
+                                new SleepAction(0.2),
+                                new InstantAction(() -> slide.runToPos(870)),
+                                new SleepAction(0.5),
                                 claw.open(),
                                 new SleepAction(0.2), //try to remove
                                 wrist.wristPickup(),
@@ -206,18 +250,23 @@ public class NewSpecAutoPushy extends LinearOpMode {
                                 wrist.wristSpecimen(),
                                 new InstantAction(() -> slide.runToPos(50)),
                                 claw.open(),
-                                pickupSideWallAfterScoreThree.build(),
+                                pickupSideWallNewAfterScoreThree.build(),
+                                new InstantAction(() -> slide.runToPos(120)),
                                 claw.close(),
                                 new SleepAction(0.5),
 
 
                                 new ParallelAction(
                                         scoreFourthPickup.build(),
-                                        new InstantAction(() -> slide.runToPos(1570)),
-                                        new InstantAction(() -> wrist.setPosition(0.5))
+                                        wrist.wristSpecimen(),
+                                        claw.close(),
+                                        new InstantAction(() -> slide.runToPos(1520))
                                 ),
-                                new InstantAction(() -> slide.runToPos(910)),
-                                new SleepAction(0.35),
+                                new InstantAction(() -> wrist.setPosition(Wrist.SPECIMEN-0.08)),
+                                new InstantAction(() -> claw.setPosition(0.07)),
+                                new SleepAction(0.2),
+                                new InstantAction(() -> slide.runToPos(870)),
+                                new SleepAction(0.5),
                                 claw.open(),
                                 new SleepAction(0.2), //try to remove
                                 wrist.wristPickup(),

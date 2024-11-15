@@ -35,7 +35,7 @@ public class BasketAuto extends LinearOpMode {
 
 
         TrajectoryActionBuilder toSpecimen = drive.actionBuilder(drive.pose)
-                .strafeTo(new Vector2d(-10, -41.1))
+                .strafeTo(new Vector2d(-10, -41))
                 .waitSeconds(0.01);
 
 
@@ -77,11 +77,11 @@ public class BasketAuto extends LinearOpMode {
 
         // x -26.3912 y 53.7334
         TrajectoryActionBuilder park = backup.fresh()
-                        .strafeToLinearHeading(new Vector2d(-36.3912, -10.766), 0)
+                        .strafeToLinearHeading(new Vector2d(-36.3912, -5), 0)
                 .waitSeconds(0.1);
 
         TrajectoryActionBuilder park2 = park.fresh()
-                        .strafeTo(new Vector2d(-21, -10.766));
+                        .strafeTo(new Vector2d(-21, -5));
 
         Actions.runBlocking(
                 new SequentialAction(
@@ -96,14 +96,19 @@ public class BasketAuto extends LinearOpMode {
                 new ParallelAction(
                     slide.setPow(),
                     new SequentialAction(
+                         wrist.wristSpecimen(),
                          claw.close(),
                          new ParallelAction(
                             toSpecimen.build(),
                             wrist.wristSpecimen(),
-                            new InstantAction(() -> slide.runToPos(1450))
+                            claw.close(),
+                            new InstantAction(() -> slide.runToPos(1520))
                         ),
-                        new InstantAction(() -> slide.runToPos(875)),
-                        new SleepAction(0.35),
+                        new InstantAction(() -> wrist.setPosition(Wrist.SPECIMEN-0.08)),
+                        new InstantAction(() -> claw.setPosition(0.07)),
+                        new SleepAction(0.2),
+                        new InstantAction(() -> slide.runToPos(870)),
+                        new SleepAction(0.5),
                         claw.open(),
                         new SleepAction(0.2),
                         new ParallelAction(

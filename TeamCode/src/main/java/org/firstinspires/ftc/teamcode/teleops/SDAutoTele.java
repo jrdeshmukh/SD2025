@@ -12,6 +12,7 @@ import com.acmerobotics.roadrunner.Vector2d;
 import com.google.blocks.ftcrobotcontroller.runtime.obsolete.TfodAccess;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.MecanumDrive;
@@ -19,6 +20,7 @@ import org.firstinspires.ftc.teamcode.backtracking.Drive;
 import org.firstinspires.ftc.teamcode.backtracking.MecDrive;
 import org.firstinspires.ftc.teamcode.wrappers.BBG;
 import org.firstinspires.ftc.teamcode.wrappers.Claw;
+import org.firstinspires.ftc.teamcode.wrappers.PinpointDrive;
 import org.firstinspires.ftc.teamcode.wrappers.Slide;
 import org.firstinspires.ftc.teamcode.wrappers.Wrist;
 
@@ -27,7 +29,7 @@ import java.util.List;
 
 @TeleOp()
 public class SDAutoTele extends OpMode {
-    MecDrive drive;
+    PinpointDrive drive;
     Slide slide;
     BBG gp1, gp2;
 
@@ -45,13 +47,14 @@ public class SDAutoTele extends OpMode {
     double speedMod = 0.75;
     ElapsedTime start;
     List<Action> runningActions = new ArrayList<>();
+    public int offset = -1022;
 
     @Override
     public void init() {
         slide = new Slide(hardwareMap);
         claw = new Claw(hardwareMap);
         wrist = new Wrist(hardwareMap);
-        drive = new MecDrive(hardwareMap, new Pose2d(-36.3912, -10.766, 0));
+        drive = new PinpointDrive(hardwareMap, new Pose2d(-36.3912, -10.766, 0));
         goAction = claw.close();
         gp2 = new BBG(gamepad2);
         gp1 = new BBG(gamepad1);
@@ -67,8 +70,8 @@ public class SDAutoTele extends OpMode {
         if(gp2.dpad_up()) {
             runningActions.add(new SequentialAction(
                     claw.close(),
-                    new InstantAction(() -> slide.runToPos(Slide.HIGH_BASKET-1030)),
-                    new SleepAction(1.35),
+                    new InstantAction(() -> slide.runToPos(Slide.HIGH_BASKET+offset)),
+                    new SleepAction(1.6),
                     wrist.wristDrop()
             ));
         }
@@ -78,9 +81,10 @@ public class SDAutoTele extends OpMode {
                     new SleepAction(0.3),
                     wrist.wristHigh(),
                     new SleepAction(0.3),
-                    new InstantAction(() -> slide.runToPos(Slide.BOTTOM-1030)),
+                    new InstantAction(() -> slide.runToPos(Slide.BOTTOM+offset)),
                     new SleepAction(1),
-                    wrist.wristPickup()
+                    wrist.wristPickup(),
+                    slide.resetEncoders()
             ));
         }
 
@@ -135,21 +139,26 @@ public class SDAutoTele extends OpMode {
         drive.updatePoseEstimate();
 
         if(Math.abs(gamepad2.left_stick_y)>0) {
+            Slide.humanControl = true;
             slide.setPower(-gamepad2.left_stick_y);
-            slide.runToPos(slide.slide.getCurrentPosition());
         }
         else {
             slide.setPow2();
         }
 
 
-        if (gp2.right_bumper())                        claw.open(); //open
-        if (gp2.left_bumper())                         claw.close(); //close
+        if (gp2.right_bumper())                        claw.setPosition(Claw.OPEN); //open
+        if (gp2.left_bumper())                         claw.setPosition(Claw.CLOSE); //close
 
         if (gamepad2.left_trigger>0.01)                wrist.setPosition(Wrist.HIGH); //straight up
         if (gamepad2.right_trigger>0.01)               wrist.setPosition(Wrist.PICKUP); //pickup
-        if (gp2.x())                                   wrist.setPosition(0.5); //sstraight out
+        if (gp2.x())                                   wrist.setPosition(Wrist.SPECIMEN); //sstraight out
         if (gp2.y())                                   wrist.setPosition(Wrist.DROP); //score, 60 degree above flat
+        if (gp2.b())                                  {slide.slide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            slide.slide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            slide.runToPos(0);
+            Slide.humanControl = true;
+        }
 
         //telemetry.addData("slide current", slide.slide.getCurrentPosition());
         //telemetry.addData("speed mod: ", speedMod);

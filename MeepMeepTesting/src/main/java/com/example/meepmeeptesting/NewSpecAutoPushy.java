@@ -36,7 +36,7 @@ public class NewSpecAutoPushy {
         MeepMeep meepMeep = new MeepMeep(800);
         double pi = Math.PI;
 
-        Pose2d initialPose = new Pose2d(10, -60.5, Math.toRadians(90));
+        Pose2d initialPose = new Pose2d(9, -60.5, Math.toRadians(90));
 
 
         RoadRunnerBotEntity myBot = new DefaultBotBuilder(meepMeep)
@@ -50,19 +50,39 @@ public class NewSpecAutoPushy {
         int startPosition = 1;
 
         TrajectoryActionBuilder dropSpecimen = myBot.getDrive().actionBuilder(initialPose)
-                .strafeTo(new Vector2d(10, -40.85))
+                .strafeTo(new Vector2d(9, -40.85))
                 .waitSeconds(0.001);
 
 
-        TrajectoryActionBuilder dropAll = dropSpecimen.fresh()
+        /*TrajectoryActionBuilder dropAll = dropSpecimen.fresh()
                 .strafeToConstantHeading(new Vector2d(27.5, -45))
-                .splineToConstantHeading(new Vector2d(47.5, -10), 0)
-                .strafeToConstantHeading(new Vector2d(47.5, -60))
-                .splineToConstantHeading(new Vector2d(57.5, -10), 0)
-                .strafeToConstantHeading(new Vector2d(57.5, -60))
-               // .splineToConstantHeading(new Vector2d(50, -27), pi)
+                .splineToConstantHeading(new Vector2d(37.5, -7), 0)
+                .splineToConstantHeading(new Vector2d(47.5, -7), 0)
+                .strafeToConstantHeading(new Vector2d(47.5, -54))
+                .splineToConstantHeading(new Vector2d(53, -10), 0)
+                .strafeToConstantHeading(new Vector2d(53, -54))
+                // .splineToConstantHeading(new Vector2d(50, -27), pi)
                 //.splineToLinearHeading(new Pose2d(new Vector2d(60, -27), new Rotation2d(pi/2, 0)), 0)
-                .strafeToLinearHeading(new Vector2d(60, -27), new Rotation2d(pi/2, 0))
+                .strafeToLinearHeading(new Vector2d(58.5, -22.86), new Rotation2d(pi/2, 0))
+                .waitSeconds(0.001);
+
+        TrajectoryActionBuilder push1 = dropSpecimen.fresh()
+                .strafeTo(new Vector2d(28.5, -41.7))
+                .splineToConstantHeading(new Vector2d(46.5, -12), 0)
+                //.strafeTo(new Vector2d(47.5, -12))
+                //.setReversed(true)
+                .splineToConstantHeading(new Vector2d(47.5, -54), 3*pi/2)
+                .splineToConstantHeading(new Vector2d(59.6, -37.3), pi/2)
+                .waitSeconds(0.001);
+
+
+        TrajectoryActionBuilder dropBoth = dropSpecimen.fresh()
+                .strafeTo(new Vector2d(37.5, -41.1))
+                .strafeTo(new Vector2d(37.5, -7))
+                .strafeTo(new Vector2d(47.5, -12))
+                .strafeToConstantHeading(new Vector2d(47.5, -54))
+                .strafeToLinearHeading(new Vector2d(50, -35), pi/2)
+                .strafeToLinearHeading(new Vector2d(60, -53), 0)
                 .waitSeconds(0.001);
 
 
@@ -90,7 +110,8 @@ public class NewSpecAutoPushy {
 
         TrajectoryActionBuilder scoreThirdPickup = pickupSideWallAfterScoreTwo.fresh()
                 .setReversed(true)
-                .strafeToLinearHeading(new Vector2d(4, -40.85), initialPose.heading)
+                .strafeToLinearHeading(new Vector2d(14, -54.6), pi/2)
+                .strafeTo(new Vector2d(1, -41.1))
                 .waitSeconds(0.001);
 
         TrajectoryActionBuilder pickupSideWallAfterScoreThree = scoreThirdPickup.fresh()
@@ -100,12 +121,57 @@ public class NewSpecAutoPushy {
         TrajectoryActionBuilder scoreFourthPickup = pickupSideWallAfterScoreThree.fresh()
                 .setReversed(true)
                 .strafeToLinearHeading(new Vector2d(2, -42.85), initialPose.heading)
+                .waitSeconds(0.001);*/
+
+
+
+
+
+        TrajectoryActionBuilder dropAll = dropSpecimen.fresh()
+                .strafeToConstantHeading(new Vector2d(32, -45))
+                .strafeToConstantHeading(new Vector2d(34, -12))
+                .strafeToConstantHeading(new Vector2d(47.5, -12))
+                .strafeToConstantHeading(new Vector2d(47.5, -51))
+                .strafeToConstantHeading(new Vector2d(50, -12))
+                .strafeToConstantHeading(new Vector2d(57.6, -12))
+                .strafeToConstantHeading(new Vector2d(57.6, -54))
+                // .splineToConstantHeading(new Vector2d(50, -27), pi)
+                //.splineToLinearHeading(new Pose2d(new Vector2d(60, -27), new Rotation2d(pi/2, 0)), 0)
+                .strafeToLinearHeading(new Vector2d(58.5, -22.86), new Rotation2d(pi/2, 0))
                 .waitSeconds(0.001);
+
+
+
+       /* TrajectoryActionBuilder pickupSideWall = dropAll.fresh()
+                .strafeToLinearHeading(new Vector2d(initialPose.position.x + 46, initialPose.position.y + 4.6), new Rotation2d(3*pi/2, 0)).waitSeconds(0.001);*/
+
+        TrajectoryActionBuilder pickupSideWall = dropAll.fresh()
+                .strafeToLinearHeading(new Vector2d(54.4, -55.17), new Rotation2d(3*pi/2, 0)).waitSeconds(0.001);
+
+        TrajectoryActionBuilder pickupSideWallNew = dropAll.fresh()
+                .splineToSplineHeading(new Pose2d(new Vector2d(42, -49.8),-pi/2 ), 0).waitSeconds(0.001);
+
+
+
+        TrajectoryActionBuilder scoreFirstPickup = pickupSideWallNew.fresh()
+                .strafeToLinearHeading(new Vector2d(7, -41.1), initialPose.heading)
+                .waitSeconds(0.001);
+
+        TrajectoryActionBuilder pickupSideWallAfterScoreOne = scoreFirstPickup.fresh()
+                .strafeToLinearHeading(new Vector2d(54.4, -55.17), new Rotation2d(3*pi/2, 0)).waitSeconds(0.001);
+
+        TrajectoryActionBuilder pickupSideWallNewAfterScoreOne = scoreFirstPickup.fresh()
+                .splineToSplineHeading(new Pose2d(new Vector2d(42, -49.8),-pi/2 ), 0).waitSeconds(0.001);
+
 
         myBot.runAction(
                 new SequentialAction(
                         dropSpecimen.build(),
                         dropAll.build(),
+                        pickupSideWallNew.build(),
+                        scoreFirstPickup.build(),
+                        pickupSideWallNewAfterScoreOne.build()
+                        /*dropBoth.build(),
                         pickupSideWall.build(),
                         scoreFirstPickup.build(),
                         pickupSideWallAfterScoreOne.build(),
@@ -113,7 +179,7 @@ public class NewSpecAutoPushy {
                         pickupSideWallAfterScoreTwo.build(),
                         scoreThirdPickup.build(),
                         pickupSideWallAfterScoreThree.build(),
-                        scoreFourthPickup.build()
+                        scoreFourthPickup.build()*/
 
                 )
         );

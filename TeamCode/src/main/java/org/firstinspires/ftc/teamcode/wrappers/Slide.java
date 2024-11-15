@@ -13,6 +13,7 @@ public class Slide {
     public DcMotorEx slide;
     private final PIDController controller;
     public final double p = 0.008, i = 0, d = 0.0005, f = 0.00005;
+    public static int offset = 0;
 
     public static final int BOTTOM = 0;
     public static final int HIGH_BASKET = 3150;
@@ -21,6 +22,7 @@ public class Slide {
     public boolean active = false;
     public static double curPow = 0;
     public double targetPosition = 0;
+    public static boolean humanControl = false;
 
     public Slide(HardwareMap map) {
         slide = map.get(DcMotorEx.class, "slide");
@@ -33,14 +35,33 @@ public class Slide {
 
     public void runToPos(int targetPosition) {
         this.targetPosition = targetPosition;
+        humanControl = false;
     }
 
     public void setPow2() {
         int pos = slide.getCurrentPosition();
-        double pid = controller.calculate(pos, targetPosition);
         double ff = pos * f;
+        if(humanControl) {
+            slide.setPower(ff);
+            return;
+        }
+        double pid = controller.calculate(pos+offset, targetPosition);
         curPow = pid + ff;
         slide.setPower(curPow);
+    }
+
+    public class ResetEncoder implements Action {
+
+        @Override
+        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+            slide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            slide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            return false;
+        }
+    }
+
+    public Action resetEncoders() {
+        return new ResetEncoder();
     }
 
 

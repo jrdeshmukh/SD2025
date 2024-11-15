@@ -10,7 +10,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 public class Claw {
     public Servo claw;
 
-    public static final double OPEN = 0.509, CLOSE = 0.149;
+    public static final double OPEN = 0.6, CLOSE = 0.11;
 
     public Claw(HardwareMap map) {
         claw = map.servo.get("claw");
