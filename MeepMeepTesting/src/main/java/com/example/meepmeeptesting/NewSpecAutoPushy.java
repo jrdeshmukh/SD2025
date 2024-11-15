@@ -155,6 +155,7 @@ public class NewSpecAutoPushy {
 
         TrajectoryActionBuilder scoreFirstPickup = pickupSideWallNew.fresh()
                 .strafeToLinearHeading(new Vector2d(7, -41.1), initialPose.heading)
+                .setReversed(true)
                 .waitSeconds(0.001);
 
         TrajectoryActionBuilder pickupSideWallAfterScoreOne = scoreFirstPickup.fresh()
