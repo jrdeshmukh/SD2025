@@ -88,6 +88,29 @@ public class SDAutoTele extends OpMode {
             ));
         }
 
+        if(gp2.right_stick_y>0.7) {
+            runningActions.add(
+                    new SequentialAction(
+                            new InstantAction(() -> claw.setPosition(0.05)),
+                            new InstantAction(() -> slide.runToPos(1520)),
+                            new InstantAction(() -> wrist.setPosition(Wrist.SPECIMEN-0.08))
+                    )
+            );
+        }
+
+        if (gp2.right_stick_y < -0.7) {
+            runningActions.add(new SequentialAction(
+                    new InstantAction(() -> slide.runToPos(870)),
+                    new SleepAction(0.5),
+                    claw.open(),
+                    new SleepAction(0.2),
+                    wrist.wristPickup(),
+                    slide.liftBottom()
+            ));
+        }
+
+
+
 
         if(gp1.a()) {
             basket = drive.pose;

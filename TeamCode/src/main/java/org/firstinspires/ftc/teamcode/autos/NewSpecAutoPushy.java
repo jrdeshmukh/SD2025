@@ -139,7 +139,7 @@ public class NewSpecAutoPushy extends LinearOpMode {
                                         new InstantAction(() -> slide.runToPos(1520))
                                 ),
                                 new InstantAction(() -> wrist.setPosition(Wrist.SPECIMEN-0.08)),
-                                new InstantAction(() -> claw.setPosition(0.07)),
+                                new InstantAction(() -> claw.setPosition(0.05)),
                                 new SleepAction(0.2),
                                 new InstantAction(() -> slide.runToPos(870)),
                                 new SleepAction(0.5),
