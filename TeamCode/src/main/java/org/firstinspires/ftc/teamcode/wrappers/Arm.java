@@ -9,25 +9,26 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-public class Slide {
-    public DcMotorEx slide;
+public class Arm {
+    public DcMotorEx arm;
     private final PIDController controller;
-    public final double p = 0.008, i = 0, d = 0.0005, f = 0.00005;
+    public final double p = 0.00, i = 0, d = 0.000;
     public static int offset = 0;
 
     public static final int BOTTOM = 0;
-    public static final int HIGH_BASKET = 3150;
-    public static final int LOW_BASKET = 1875;
-    public static final int HIGH_RUNG = 1013;
+    public static final int HIGH_BASKET = 0;
+    public static final int LOW_BASKET = 0;
+    public static final int HIGH_RUNG = 0;
     public boolean active = false;
     public static double curPow = 0;
     public double targetPosition = 0;
     public static boolean humanControl = false;
+    public static double TICKS_PER_DEGREE = 200;
 
-    public Slide(HardwareMap map) {
-        slide = map.get(DcMotorEx.class, "slide");
-        slide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        slide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+    public Arm(HardwareMap map) {
+        arm = map.get(DcMotorEx.class, "slide");
+        arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        arm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         controller = new PIDController(p, i, d);
         controller.setPID(p, i, d);
@@ -38,24 +39,25 @@ public class Slide {
         humanControl = false;
     }
 
+    public double getAngle() {
+        return arm.getCurrentPosition()/TICKS_PER_DEGREE;
+    }
+
     public void setPow2() {
-        int pos = slide.getCurrentPosition();
-        double ff = pos * f;
+        int pos = arm.getCurrentPosition();
         if(humanControl) {
-            slide.setPower(ff);
             return;
         }
-        double pid = controller.calculate(pos, targetPosition);
-        curPow = pid + ff;
-        slide.setPower(curPow);
+        curPow = controller.calculate(pos, targetPosition);
+        arm.setPower(curPow);
     }
 
     public class ResetEncoder implements Action {
 
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            slide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            slide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            arm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             targetPosition = 0;
             return false;
         }
@@ -70,11 +72,9 @@ public class Slide {
     public class SetPow implements Action {
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            int pos = slide.getCurrentPosition();
+            int pos = arm.getCurrentPosition();
             double pid = controller.calculate(pos, targetPosition);
-            double ff = pos * f;
-            curPow = pid + ff;
-            slide.setPower(curPow);
+            arm.setPower(pid);
             return true;
         }
     };
@@ -114,8 +114,8 @@ public class Slide {
     public class LiftLow implements Action {
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-             targetPosition = Slide.LOW_BASKET;
-             return false;
+            targetPosition = Slide.LOW_BASKET;
+            return false;
         }
     }
     public Action liftLow() {
@@ -135,7 +135,7 @@ public class Slide {
     }
 
     public void setPower(double power) {
-        slide.setPower(power);
+        arm.setPower(power);
     }
 
 

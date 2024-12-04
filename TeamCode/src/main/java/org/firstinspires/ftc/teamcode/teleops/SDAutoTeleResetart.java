@@ -17,6 +17,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.MecanumDrive;
 import org.firstinspires.ftc.teamcode.wrappers.BBG;
 import org.firstinspires.ftc.teamcode.wrappers.Claw;
+import org.firstinspires.ftc.teamcode.wrappers.FirstBoolean;
 import org.firstinspires.ftc.teamcode.wrappers.PinpointDrive;
 import org.firstinspires.ftc.teamcode.wrappers.Slide;
 import org.firstinspires.ftc.teamcode.wrappers.Wrist;
@@ -37,9 +38,13 @@ public class SDAutoTeleResetart extends OpMode {
     Action goAction;
     boolean autoDriving = false, lifting;
 
+    FirstBoolean ryAbove = new FirstBoolean();
+    FirstBoolean ryBelow = new FirstBoolean();
+
     double fw=0.0, strafe=0.00001, turn=0.0;
     private long lastGamepadUpdate = 0;
 
+    private boolean rsyUsed = false;
 
     double speedMod = 0.75;
     ElapsedTime start;
@@ -82,6 +87,29 @@ public class SDAutoTeleResetart extends OpMode {
                     wrist.wristPickup()
             ));
         }
+
+
+
+        if(ryAbove.betterboolean(gamepad2.right_stick_y>0.7)) {
+            runningActions.add(new SequentialAction(
+                    new InstantAction(() -> slide.runToPos(870)),
+                    new SleepAction(0.5),
+                    claw.open(),
+                    new SleepAction(0.2),
+                    wrist.wristPickup(),
+                    slide.liftBottom()
+            )
+            );
+        }
+        if (ryBelow.betterboolean(gamepad2.right_stick_y<-0.7)) {
+            runningActions.add(new SequentialAction(
+                            new InstantAction(() -> claw.setPosition(0.05)),
+                            new InstantAction(() -> slide.runToPos(1620)),
+                            new InstantAction(() -> wrist.setPosition(Wrist.SPECIMEN - 0.08))
+                    ));
+        }
+
+
 
 
         if(gp1.a()) {

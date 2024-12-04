@@ -35,62 +35,64 @@ public class JayanNEWSPECUIAUTO {
                 .strafeTo(new Vector2d(10, -41.3))
                 .waitSeconds(0.001);
 
-        TrajectoryActionBuilder pickup1 = dropSpecimen.fresh()
-                //.strafeTo(new Vector2d(10, -40))
+        TrajectoryActionBuilder push1 = dropSpecimen.fresh()
+                .strafeTo(new Vector2d(28.5, -41.7))
+                .splineToConstantHeading(new Vector2d(46.5, -12), 0)
+                //.strafeTo(new Vector2d(47.5, -12))
                 .setReversed(true)
-                .splineToLinearHeading(new Pose2d(32, -35, 0), pi/2)
-                .splineToConstantHeading(new Vector2d(45, -10), 0)
+                .splineToConstantHeading(new Vector2d(47.5, -54), 3*pi/2)
+                .strafeToLinearHeading(new Vector2d(59.6, -37.3), pi/2)
                 .waitSeconds(0.001);
 
-        TrajectoryActionBuilder drop1 = pickup1.fresh()
+        TrajectoryActionBuilder spline1 = dropSpecimen.fresh()
+                .strafeToConstantHeading(new Vector2d(26.5, -45))
+                .splineToConstantHeading(new Vector2d(38.6, -12), 0)
+                .splineToConstantHeading(new Vector2d(45.5, -12), 0)
+                .splineToConstantHeading(new Vector2d(42.5, -51), 3*pi/2)
+                .strafeToLinearHeading(new Vector2d(59.6, -37.3), pi/2)
                 .waitSeconds(0.001);
 
-        TrajectoryActionBuilder pickup2 = drop1.fresh()
-                .waitSeconds(0.001);
-
-        TrajectoryActionBuilder drop2 = pickup2.fresh()
-                .strafeTo(new Vector2d(38, -59))
-                .waitSeconds(0.001);
-
-        TrajectoryActionBuilder pickupWallSidePixel  = drop2.fresh()
-                .strafeToLinearHeading(new Vector2d(58, -26), new Rotation2d(3*pi/2, 0))
-                .waitSeconds(0.001);
-
-        TrajectoryActionBuilder dropSideWallPixel = pickupWallSidePixel.fresh()
-                .strafeTo(new Vector2d(38, -59))
-                .waitSeconds(0.001);
-
-        TrajectoryActionBuilder pickupSideWall = drop2.fresh()
+        TrajectoryActionBuilder dropAndGrab = spline1.fresh()
+                .strafeToLinearHeading(new Vector2d(52.93, -49.2), 3*pi/2)
                 .waitSeconds(0.001);
 
 
-        TrajectoryActionBuilder score1 = drop2.fresh()
+
+        TrajectoryActionBuilder scoreFirstPickup = dropAndGrab.fresh()
                 .setReversed(true)
+                .strafeToLinearHeading(new Vector2d(7, -41.1), initialPose.heading)
                 .waitSeconds(0.001);
 
-        TrajectoryActionBuilder picup2 = score1.fresh()
+        TrajectoryActionBuilder pickupSideWallAfterScoreOne = scoreFirstPickup.fresh()
+                .strafeToLinearHeading(new Vector2d(52.93, -49.2), 3*pi/2)
+                .waitSeconds(0.001);
+
+
+        TrajectoryActionBuilder scoreSecondPickup = pickupSideWallAfterScoreOne.fresh()
                 .setReversed(true)
+                .strafeToLinearHeading(new Vector2d(4, -41.1), initialPose.heading)
                 .waitSeconds(0.001);
 
+        TrajectoryActionBuilder pickupSideWallAfterScoreTwo = scoreSecondPickup.fresh()
+                .strafeToLinearHeading(new Vector2d(52.93, -49.2), 3*pi/2)
+                .waitSeconds(0.001);
 
-        TrajectoryActionBuilder score3 = picup2.fresh()
+        TrajectoryActionBuilder scoreThirdPickup = pickupSideWallAfterScoreTwo.fresh()
                 .setReversed(true)
+                .strafeToLinearHeading(new Vector2d(1, -41.1), initialPose.heading)
                 .waitSeconds(0.001);
 
-        TrajectoryActionBuilder pickup5 = score3.fresh()
-                .setReversed(true)
-                .waitSeconds(0.001);
 
         myBot.runAction(
                 new SequentialAction(
                         dropSpecimen.build(),
-                        pickup1.build(),
-                        drop1.build(),
-                        pickup2.build(),
-                        drop2.build(),
-                        pickupWallSidePixel.build(),
-                        dropSideWallPixel.build(),
-                        pickupSideWall.build()
+                        spline1.build(),
+                        dropAndGrab.build(),
+                        scoreFirstPickup.build(),
+                        pickupSideWallAfterScoreOne.build(),
+                        scoreSecondPickup.build(),
+                        pickupSideWallAfterScoreTwo.build(),
+                        scoreThirdPickup.build()
 
                 )
         );

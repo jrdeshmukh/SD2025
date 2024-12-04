@@ -20,6 +20,7 @@ import org.firstinspires.ftc.teamcode.backtracking.Drive;
 import org.firstinspires.ftc.teamcode.backtracking.MecDrive;
 import org.firstinspires.ftc.teamcode.wrappers.BBG;
 import org.firstinspires.ftc.teamcode.wrappers.Claw;
+import org.firstinspires.ftc.teamcode.wrappers.FirstBoolean;
 import org.firstinspires.ftc.teamcode.wrappers.PinpointDrive;
 import org.firstinspires.ftc.teamcode.wrappers.Slide;
 import org.firstinspires.ftc.teamcode.wrappers.Wrist;
@@ -40,6 +41,9 @@ public class SDAutoTele extends OpMode {
     Action goAction;
     boolean autoDriving = false, lifting;
 
+    FirstBoolean ryAbove = new FirstBoolean();
+    FirstBoolean ryBelow = new FirstBoolean();
+
     double fw=0.0, strafe=0.00001, turn=0.0;
     private long lastGamepadUpdate = 0;
 
@@ -48,6 +52,7 @@ public class SDAutoTele extends OpMode {
     ElapsedTime start;
     List<Action> runningActions = new ArrayList<>();
     public int offset = -1022;
+    public boolean rsyUsed = false;
 
     @Override
     public void init() {
@@ -81,34 +86,32 @@ public class SDAutoTele extends OpMode {
                     new SleepAction(0.3),
                     wrist.wristHigh(),
                     new SleepAction(0.3),
-                    new InstantAction(() -> slide.runToPos(Slide.BOTTOM+offset)),
+                    new InstantAction(() -> slide.runToPos(-370)),
                     new SleepAction(1),
                     wrist.wristPickup(),
+                    new SleepAction(1.7),
                     slide.resetEncoders()
             ));
         }
 
-        if(gp2.right_stick_y>0.7) {
-            runningActions.add(
-                    new SequentialAction(
-                            new InstantAction(() -> claw.setPosition(0.05)),
-                            new InstantAction(() -> slide.runToPos(1520)),
-                            new InstantAction(() -> wrist.setPosition(Wrist.SPECIMEN-0.08))
+        if(ryAbove.betterboolean(gamepad2.right_stick_y>0.7)) {
+            runningActions.add(new SequentialAction(
+                            new InstantAction(() -> slide.runToPos(870)),
+                            new SleepAction(0.5),
+                            claw.open(),
+                            new SleepAction(0.2),
+                            wrist.wristPickup(),
+                            slide.liftBottom()
                     )
             );
         }
-
-        if (gp2.right_stick_y < -0.7) {
+        if (ryBelow.betterboolean(gamepad2.right_stick_y<-0.7)) {
             runningActions.add(new SequentialAction(
-                    new InstantAction(() -> slide.runToPos(870)),
-                    new SleepAction(0.5),
-                    claw.open(),
-                    new SleepAction(0.2),
-                    wrist.wristPickup(),
-                    slide.liftBottom()
+                    new InstantAction(() -> claw.setPosition(0.05)),
+                    new InstantAction(() -> slide.runToPos(1620)),
+                    new InstantAction(() -> wrist.setPosition(Wrist.SPECIMEN - 0.08))
             ));
         }
-
 
 
 
@@ -180,19 +183,20 @@ public class SDAutoTele extends OpMode {
         if (gp2.b())                                  {slide.slide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             slide.slide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             slide.runToPos(0);
+            offset = 0;
             Slide.humanControl = true;
         }
 
-        //telemetry.addData("slide current", slide.slide.getCurrentPosition());
-        //telemetry.addData("speed mod: ", speedMod);
-        //telemetry.addData("slide target", target);
-        //telemetry.addData("claw pos", claw.claw.getPosition());
-        //telemetry.addData("x: ", drive.pose.position.x);
-        //telemetry.addData("y: ", drive.pose.position.y);
-        //telemetry.addData("heading: ", Math.toDegrees(drive.pose.heading.toDouble()));
-        //telemetry.addData("running actions: ", runningActions.size());
-        //telemetry.addData("autoDriving: ", autoDriving);
-        //telemetry.addData("time: ", new ElapsedTime().milliseconds()-start.milliseconds());
-        //telemetry.update();
+        telemetry.addData("slide current", slide.slide.getCurrentPosition());
+        telemetry.addData("speed mod: ", speedMod);
+        telemetry.addData("slide target", slide.targetPosition);
+        telemetry.addData("claw pos", claw.claw.getPosition());
+        telemetry.addData("x: ", drive.pose.position.x);
+        telemetry.addData("y: ", drive.pose.position.y);
+        telemetry.addData("heading: ", Math.toDegrees(drive.pose.heading.toDouble()));
+        telemetry.addData("running actions: ", runningActions.size());
+        telemetry.addData("autoDriving: ", autoDriving);
+        telemetry.addData("time: ", new ElapsedTime().milliseconds()-start.milliseconds());
+        telemetry.update();
     }
 }

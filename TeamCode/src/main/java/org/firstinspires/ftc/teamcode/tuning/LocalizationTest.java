@@ -23,7 +23,9 @@ public class LocalizationTest extends LinearOpMode {
         if (TuningOpModes.DRIVE_CLASS.equals(MecanumDrive.class)) {
             Pose2d spec = new Pose2d(10, -64.5, Math.toRadians(90));
             Pose2d basket = new Pose2d(-10, -64.5, Math.toRadians(90));
-            PinpointDrive drive = new PinpointDrive(hardwareMap, spec);
+            Pose2d ylw = new Pose2d(-33.7, -64.5, Math.toRadians(90));
+
+            PinpointDrive drive = new PinpointDrive(hardwareMap, ylw);
 
 
             waitForStart();

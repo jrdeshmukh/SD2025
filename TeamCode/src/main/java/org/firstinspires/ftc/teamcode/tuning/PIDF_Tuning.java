@@ -30,6 +30,7 @@ public class PIDF_Tuning extends OpMode {
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
         motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        motor.setDirection(DcMotorSimple.Direction.REVERSE);
 
 
     }
@@ -43,6 +44,7 @@ public class PIDF_Tuning extends OpMode {
         telemetry.addData("power: ", curPow);
         telemetry.addData("pos: ", pos);
         telemetry.addData("lTarget: ", target);
+        telemetry.addData("error: ", target-pos);
         telemetry.update();
     }
 }

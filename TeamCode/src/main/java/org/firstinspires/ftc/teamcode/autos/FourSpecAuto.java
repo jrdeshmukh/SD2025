@@ -61,42 +61,43 @@ public class FourSpecAuto extends LinearOpMode {
                 .waitSeconds(0.001);
 
         TrajectoryActionBuilder spline1 = dropSpecimen.fresh()
-                .strafeToConstantHeading(new Vector2d(27.5, -45))
-                .splineToConstantHeading(new Vector2d(32.5, -12), 0)
-                .splineToConstantHeading(new Vector2d(47.5, -12), 0)
-                .strafeToConstantHeading(new Vector2d(47.5, -51))
+                .strafeToConstantHeading(new Vector2d(26.5, -45))
+                .splineToConstantHeading(new Vector2d(38.6, -12), 0)
+                .splineToLinearHeading(new Pose2d(47.5, -12, pi/2-0.01), 0)
+                .strafeTo(new Vector2d(42.5, -51))
                 .strafeToLinearHeading(new Vector2d(59.6, -37.3), pi/2)
                 .waitSeconds(0.001);
 
 
-        TrajectoryActionBuilder dropAndGrab = push1.fresh()
-                .strafeToLinearHeading(new Vector2d(52.93, -49.2), 3*pi/2)
+
+        TrajectoryActionBuilder dropAndGrab = spline1.fresh()
+                .strafeToLinearHeading(new Vector2d(52.93, -47.2), 3*pi/2)
                 .waitSeconds(0.001);
 
 
 
         TrajectoryActionBuilder scoreFirstPickup = dropAndGrab.fresh()
                 .setReversed(true)
-                .strafeToLinearHeading(new Vector2d(7, -41.1), initialPose.heading)
+                .strafeToLinearHeading(new Vector2d(7, -41.1), pi/2+0.001)
                 .waitSeconds(0.001);
 
         TrajectoryActionBuilder pickupSideWallAfterScoreOne = scoreFirstPickup.fresh()
-                .strafeToLinearHeading(new Vector2d(52.93, -49.2), 3*pi/2)
+                .strafeToLinearHeading(new Vector2d(52.93, -49.8), 3*pi/2)
                 .waitSeconds(0.001);
 
 
         TrajectoryActionBuilder scoreSecondPickup = pickupSideWallAfterScoreOne.fresh()
                 .setReversed(true)
-                .strafeToLinearHeading(new Vector2d(4, -41.1), initialPose.heading)
+                .strafeToLinearHeading(new Vector2d(4, -41.1), pi/2+0.001)
                 .waitSeconds(0.001);
 
         TrajectoryActionBuilder pickupSideWallAfterScoreTwo = scoreSecondPickup.fresh()
-                .strafeToLinearHeading(new Vector2d(52.93, -49.2), 3*pi/2)
+                .strafeToLinearHeading(new Vector2d(52.93, -49.7), 3*pi/2)
                 .waitSeconds(0.001);
 
         TrajectoryActionBuilder scoreThirdPickup = pickupSideWallAfterScoreTwo.fresh()
                 .setReversed(true)
-                .strafeToLinearHeading(new Vector2d(1, -41.1), initialPose.heading)
+                .strafeToLinearHeading(new Vector2d(1, -41.1), pi/2+0.001)
                 .waitSeconds(0.001);
 
         Actions.runBlocking(
@@ -123,7 +124,7 @@ public class FourSpecAuto extends LinearOpMode {
                                         new InstantAction(() -> slide.runToPos(1520))
                                 ),
                                 new InstantAction(() -> wrist.setPosition(Wrist.SPECIMEN-0.08)),
-                                new InstantAction(() -> claw.setPosition(0.07)),
+                                new InstantAction(() -> claw.setPosition(Claw.CLOSE-0.03)),
                                 new SleepAction(0.2),
                                 new InstantAction(() -> slide.runToPos(870)),
                                 new SleepAction(0.5),
@@ -131,7 +132,7 @@ public class FourSpecAuto extends LinearOpMode {
                                 new SleepAction(0.2),
                                 slide.liftBottom(),
                                 new ParallelAction(
-                                    push1.build(),
+                                    spline1.build(),
                                     new SequentialAction(
                                         new SleepAction(1),
                                         wrist.wristPickup()
@@ -140,11 +141,11 @@ public class FourSpecAuto extends LinearOpMode {
                                 new SleepAction(0.2),
                                 claw.close(),
                                 new SleepAction(0.3),
-                                new InstantAction(() -> slide.runToPos(75)),
+                                new InstantAction(() -> slide.runToPos(100)),
                                 dropAndGrab.build(),
                                 claw.open(),
                                 new SleepAction(0.25),
-                                new InstantAction(() -> slide.runToPos(pickupHeight)),
+                                new InstantAction(() -> slide.runToPos(pickupHeight+20)),
                                 new ParallelAction(
                                     wrist.wristSpecimen(),
                                     new SequentialAction(
@@ -160,7 +161,7 @@ public class FourSpecAuto extends LinearOpMode {
                                         claw.open(),
                                         new SleepAction(0.2), //try to remove
 
-                                        new InstantAction(() -> slide.runToPos(pickupHeight+40)),
+                                        new InstantAction(() -> slide.runToPos(pickupHeight+50)),
                                         pickupSideWallAfterScoreOne.build(),
                                         new SleepAction(0.5),
                                         claw.close(),
@@ -172,12 +173,12 @@ public class FourSpecAuto extends LinearOpMode {
                                         new SleepAction(0.35),
                                         claw.open(),
                                         new SleepAction(0.2), //try to remove
-                                        new InstantAction(() -> slide.runToPos(pickupHeight+60)),
+                                        new InstantAction(() -> slide.runToPos(pickupHeight+50)),
                                         pickupSideWallAfterScoreTwo.build(),
                                         new SleepAction(0.3),
                                         claw.close(),
                                         new SleepAction(0.6),
-                                        new InstantAction(() -> slide.runToPos(highHeight+100)),
+                                        new InstantAction(() -> slide.runToPos(highHeight+170)),
                                         new SleepAction(0.6),
                                         scoreThirdPickup.build(),
                                         new InstantAction(() -> slide.runToPos(lowHeight)),
