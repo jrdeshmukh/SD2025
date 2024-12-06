@@ -27,7 +27,7 @@ import java.util.Arrays;
 public class FourYellow extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
-        Pose2d initialPose = new Pose2d(-37.29, -63.25, Math.toRadians(180));
+        Pose2d initialPose = new Pose2d(-33.74, -64.5, Math.toRadians(90));
         PinpointDrive drive = new PinpointDrive(hardwareMap, initialPose);
         Claw claw = new Claw(hardwareMap);
         Wrist wrist = new Wrist(hardwareMap);
@@ -39,7 +39,7 @@ public class FourYellow extends LinearOpMode {
 
 
        TrajectoryActionBuilder scorePreload = drive.actionBuilder(drive.pose)
-               .strafeToConstantHeading(new Vector2d(-33.7, -55))
+               .strafeToConstantHeading(new Vector2d(-40.7, -57))
                //.strafeToLinearHeading(new Vector2d(-50.1, -50.1), 5*pi/4)
                .strafeToLinearHeading(new Vector2d(-48.2, -49.2), 5*pi/4)
                .waitSeconds(0.001);
@@ -48,35 +48,34 @@ public class FourYellow extends LinearOpMode {
 
 
         TrajectoryActionBuilder toFirst = scorePreload.fresh()
-                .strafeToLinearHeading(new Vector2d(-49.2, -39.3), pi/2)
+                .strafeToLinearHeading(new Vector2d(-49.2, -38.5), pi/2)
                 .waitSeconds(0.01);
 
         TrajectoryActionBuilder toBasket1 = toFirst.fresh()
                 .strafeTo(new Vector2d(-48, -41))
                 //.strafeToLinearHeading(new Vector2d(-50.1, -50.1), 5*pi/4)
-                .strafeToLinearHeading(new Vector2d(-48.5, -50.5), 5*pi/4)
+                .strafeToLinearHeading(new Vector2d(-48, -50), 5*pi/4)
                 .waitSeconds(0.01);
 
         TrajectoryActionBuilder toSecond = toBasket1.fresh()
                 //.strafeTo(new Vector2d(-50.1, -50.1))
-                .strafeToLinearHeading(new Vector2d(-58.75, -37.1), pi/2)
+                .strafeToLinearHeading(new Vector2d(-58.1, -36.8), pi/2)
                 .waitSeconds(0.01);
 
         TrajectoryActionBuilder toBasket2 = toSecond.fresh()
                 .strafeTo(new Vector2d(-58.5, -41))
                 //.strafeToLinearHeading(new Vector2d(-50.1, -50.1), 5*pi/4)
-                .strafeToLinearHeading(new Vector2d(-48.5, -50), 5*pi/4)
+                .strafeToLinearHeading(new Vector2d(-47.2, -49.2), 5*pi/4)
                 .waitSeconds(0.01);
 
         TrajectoryActionBuilder toThird = toBasket2.fresh()
-                .strafeTo(new Vector2d(-50.1, -50.1))
-                .strafeToLinearHeading(new Vector2d(-54.8, -25.9717), pi)
+                .strafeToLinearHeading(new Vector2d(-54.6, -25), pi)
                 .waitSeconds(0.01);
 
         TrajectoryActionBuilder backup = toThird.fresh()
                 .strafeTo(new Vector2d(-55, -26.9))
                 // .strafeToLinearHeading(new Vector2d(-50.1, -50.1), 5*pi/4)
-                .strafeToLinearHeading(new Vector2d(-48.5, -50), 5*pi/4)
+                .strafeToLinearHeading(new Vector2d(-48, -50), 5*pi/4)
                 .waitSeconds(0.01);
 
 
@@ -157,14 +156,10 @@ public class FourYellow extends LinearOpMode {
                                 new SleepAction(0.3),
                                 wrist.wristHigh(),
                                 new ParallelAction(
-                                        new SequentialAction(
-                                                new SleepAction(0.5),
-                                                toThird.build()
-
-                                          ),
+                                       toThird.build(),
                                         new SequentialAction(
                                                 new InstantAction( () -> slide.runToPos(-40)),
-                                                new SleepAction(0.7),
+                                                new SleepAction(0.3),
                                                 wrist.wristPickup()
                                         )
                                 ),
@@ -188,7 +183,7 @@ public class FourYellow extends LinearOpMode {
                                 new SleepAction(0.3),
                                 wrist.wristHigh(),
                                 new SleepAction(0.5),
-                                new InstantAction(() -> slide.runToPos(1390)),
+                                new InstantAction(() -> slide.runToPos(1450)),
                                 new ParallelAction(
                                         park.build(),
                                         wrist.wristHigh()

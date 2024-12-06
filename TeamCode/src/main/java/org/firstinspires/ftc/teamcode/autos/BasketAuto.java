@@ -57,17 +57,16 @@ public class BasketAuto extends LinearOpMode {
 
         TrajectoryActionBuilder toSecond = toBasket1.fresh()
                 //.strafeTo(new Vector2d(-50.1, -50.1))
-                .strafeToLinearHeading(new Vector2d(-59.5, -36.8), pi/2)
+                .strafeToLinearHeading(new Vector2d(-59.2, -36.8), pi/2)
                 .waitSeconds(0.01);
 
         TrajectoryActionBuilder toBasket2 = toSecond.fresh()
                 .strafeTo(new Vector2d(-58.5, -41))
                 //.strafeToLinearHeading(new Vector2d(-50.1, -50.1), 5*pi/4)
-                .strafeToLinearHeading(new Vector2d(-48, -50), 5*pi/4)
+                .strafeToLinearHeading(new Vector2d(-47.2, -49.2), 5*pi/4)
                 .waitSeconds(0.01);
 
         TrajectoryActionBuilder toThird = toBasket2.fresh()
-                .strafeTo(new Vector2d(-50.1, -50.1))
                 .strafeToLinearHeading(new Vector2d(-54.8, -25), pi)
                 .waitSeconds(0.01);
 
@@ -106,19 +105,19 @@ public class BasketAuto extends LinearOpMode {
                             toSpecimen.build(),
                             wrist.wristSpecimen(),
                             claw.close(),
-                            new InstantAction(() -> slide.runToPos(1520))
+                            new InstantAction(() -> slide.runToPos(1650))
                         ),
                         new InstantAction(() -> claw.setPosition(Claw.CLOSE-0.05)),
                         new InstantAction(() -> wrist.setPosition(Wrist.SPECIMEN-0.08)),
                         new InstantAction(() -> claw.setPosition(Claw.CLOSE-0.08)),
 
                             new SleepAction(0.2),
-                        new InstantAction(() -> slide.runToPos(870)),
+                        new InstantAction(() -> slide.runToPos(1050)),
                         new SleepAction(0.5),
                         claw.open(),
                         new SleepAction(0.3),
                         wrist.wristPickup(),
-                        new SleepAction(1),
+                        new SleepAction(0.3),
                         new ParallelAction(
                             toFirst.build(),
                             slide.liftBottom()
@@ -162,8 +161,7 @@ public class BasketAuto extends LinearOpMode {
                             toThird.build(),
                             new SequentialAction(
                                 new SleepAction(0.3),
-                                    new InstantAction( () -> slide.runToPos(-30)),
-                                new SleepAction(0.2),
+                                new InstantAction( () -> slide.runToPos(-30)),
                                 wrist.wristPickup()
                             )
                         ),
@@ -187,7 +185,7 @@ public class BasketAuto extends LinearOpMode {
                         new SleepAction(0.3),
                         wrist.wristHigh(),
                         new SleepAction(0.5),
-                        new InstantAction(() -> slide.runToPos(1370)),
+                        new InstantAction(() -> slide.runToPos(1450)),
                         new ParallelAction(
                               park.build(),
                               wrist.wristHigh()
