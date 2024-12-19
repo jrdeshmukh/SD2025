@@ -2,16 +2,21 @@ package org.firstinspires.ftc.teamcode.wrappers;
 
 import androidx.annotation.NonNull;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
+@Config()
 public class Wrist {
     public Servo wrist;
 
-    public static double PICKUP = 0.1650, DROP = 0.6594, HIGH = 0.8694;
-    public static double HIGH_RUNG = 0.63, SPECIMEN = 0.5494;
+    //public static double PICKUP = 0.1650, DROP = 0.6594, HIGH = 0.8694;
+    //public static double HIGH_RUNG = 0.63, SPECIMEN = 0.5494;
+
+    public static double PICKUP = 0.395, DROP = 0.63, HIGH = 0.85;
+    public static double HIGH_RUNG = 0.63, SPECIMEN = 0.4589;
 
     public Wrist(HardwareMap map) {
         wrist = map.servo.get("wrist");

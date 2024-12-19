@@ -23,6 +23,7 @@ import org.firstinspires.ftc.teamcode.wrappers.Claw;
 import org.firstinspires.ftc.teamcode.wrappers.FirstBoolean;
 import org.firstinspires.ftc.teamcode.wrappers.PinpointDrive;
 import org.firstinspires.ftc.teamcode.wrappers.Slide;
+import org.firstinspires.ftc.teamcode.wrappers.Spin;
 import org.firstinspires.ftc.teamcode.wrappers.Wrist;
 
 import java.util.ArrayList;
@@ -39,6 +40,7 @@ public class SDAutoTele extends OpMode {
     Claw claw;
     Wrist wrist;
     Action goAction;
+    Spin spin;
     boolean autoDriving = false, lifting;
 
     FirstBoolean ryAbove = new FirstBoolean();
@@ -51,7 +53,7 @@ public class SDAutoTele extends OpMode {
     double speedMod = 0.75;
     ElapsedTime start;
     List<Action> runningActions = new ArrayList<>();
-    public int offset = -1022;
+    public int offset = -600;
     public boolean rsyUsed = false;
 
     @Override
@@ -64,6 +66,7 @@ public class SDAutoTele extends OpMode {
         gp2 = new BBG(gamepad2);
         gp1 = new BBG(gamepad1);
         start = new ElapsedTime();
+        spin = new Spin(hardwareMap);
     }
 
     @Override
@@ -88,31 +91,11 @@ public class SDAutoTele extends OpMode {
                     new SleepAction(0.3),
                     new InstantAction(() -> slide.runToPos(-370)),
                     new SleepAction(1),
-                    wrist.wristPickup(),
+                    //new InstantAction(() -> wrist.setPosition(Wrist.SPECIMEN)),
                     new SleepAction(1.7),
                     slide.resetEncoders()
             ));
         }
-
-        if(ryAbove.betterboolean(gamepad2.right_stick_y>0.7)) {
-            runningActions.add(new SequentialAction(
-                            new InstantAction(() -> slide.runToPos(870)),
-                            new SleepAction(0.5),
-                            claw.open(),
-                            new SleepAction(0.2),
-                            wrist.wristPickup(),
-                            slide.liftBottom()
-                    )
-            );
-        }
-        if (ryBelow.betterboolean(gamepad2.right_stick_y<-0.7)) {
-            runningActions.add(new SequentialAction(
-                    new InstantAction(() -> claw.setPosition(0.05)),
-                    new InstantAction(() -> slide.runToPos(1620)),
-                    new InstantAction(() -> wrist.setPosition(Wrist.SPECIMEN - 0.08))
-            ));
-        }
-
 
 
         if(gp1.a()) {
@@ -186,6 +169,9 @@ public class SDAutoTele extends OpMode {
             offset = 0;
             Slide.humanControl = true;
         }
+
+        spin.setSpin(0.02*-gamepad2.right_stick_x + spin.spin.getPosition());
+
 
         telemetry.addData("slide current", slide.slide.getCurrentPosition());
         telemetry.addData("speed mod: ", speedMod);

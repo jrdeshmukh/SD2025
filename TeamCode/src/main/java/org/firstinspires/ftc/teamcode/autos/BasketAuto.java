@@ -67,7 +67,8 @@ public class BasketAuto extends LinearOpMode {
                 .waitSeconds(0.01);
 
         TrajectoryActionBuilder toThird = toBasket2.fresh()
-                .strafeToLinearHeading(new Vector2d(-54.8, -25), pi)
+                .strafeToLinearHeading(new Vector2d(-50.6, -25), pi)
+                .strafeToLinearHeading(new Vector2d(-54.6, -25), pi)
                 .waitSeconds(0.01);
 
         TrajectoryActionBuilder backup = toThird.fresh()
@@ -185,15 +186,17 @@ public class BasketAuto extends LinearOpMode {
                         new SleepAction(0.3),
                         wrist.wristHigh(),
                         new SleepAction(0.5),
-                        new InstantAction(() -> slide.runToPos(1450)),
-                        new ParallelAction(
-                              park.build(),
-                              wrist.wristHigh()
-                        ),
-                         park2.build(),
-                         new InstantAction(() -> slide.runToPos(1030))
-                    )
-                )
+                            new InstantAction(() -> slide.runToPos(800)),
+                            wrist.wristHigh(),
+                            new ParallelAction(
+                                    park.build(),
+                                    new SequentialAction(
+                                            new SleepAction(0.5),
+                                            wrist.wristPickup()
+                                    )
+                            ),
+                            park2.build()
+                    ))
 
         );
     }

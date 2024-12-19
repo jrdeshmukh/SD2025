@@ -24,8 +24,10 @@ public class LocalizationTest extends LinearOpMode {
             Pose2d spec = new Pose2d(10, -64.5, Math.toRadians(90));
             Pose2d basket = new Pose2d(-10, -64.5, Math.toRadians(90));
             Pose2d ylw = new Pose2d(-33.7, -64.5, Math.toRadians(90));
+            Pose2d newBasket = new Pose2d(-8.5, -63.7, Math.toRadians(90));
 
-            PinpointDrive drive = new PinpointDrive(hardwareMap, ylw);
+
+            PinpointDrive drive = new PinpointDrive(hardwareMap, newBasket);
 
 
             waitForStart();

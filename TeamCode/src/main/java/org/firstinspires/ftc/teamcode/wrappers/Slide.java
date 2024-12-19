@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
+import com.acmerobotics.roadrunner.InstantAction;
 import com.arcrobotics.ftclib.controller.PIDController;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -134,8 +135,25 @@ public class Slide {
         return new LiftBottom();
     }
 
+
+    public class WaitToDone implements Action {
+
+        @Override
+        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+            return Math.abs(slide.getCurrentPosition()-targetPosition)<50;
+        }
+    }
+
+    public Action waitToDone() {
+        return new WaitToDone();
+    }
+
     public void setPower(double power) {
         slide.setPower(power);
+    }
+
+    public Action autoMove(int pos) {
+        return new InstantAction(() -> runToPos(pos));
     }
 
 
